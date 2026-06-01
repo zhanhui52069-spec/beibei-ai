@@ -1,50 +1,39 @@
-type IncomingMessage = {
-  role?: string
-  content?: string
-  parts?: Array<{
-    type?: string
-    text?: string
-  }>
-}
+export const maxDuration = 60
 
 type ChatMessage = {
   role: 'user' | 'assistant' | 'system'
   content: string
 }
 
-export const maxDuration = 60
-
-const baseURL = process.env.OPENAI_BASE_URL || 'https://api.deepseek.com/v1'
-const modelName = process.env.MODEL_NAME || 'deepseek-chat'
-
-function normalizeMessages(messages: IncomingMessage[] = []): ChatMessage[] {
+function normalizeMessages(messages: any[] = []): ChatMessage[] {
   return messages
     .map((message) => {
-      if (message.role !== 'user' && message.role !== 'assistant' && message.role !== 'system') {
-        return null
-      }
-
+      const role = message.role
       const content =
         message.content ||
         message.parts
-          ?.filter((part) => part.type === 'text' && part.text)
-          .map((part) => part.text)
+          ?.filter((part: any) => part.type === 'text' && part.text)
+          .map((part: any) => part.text)
           .join('\n') ||
         ''
 
-      return {
-        role: message.role,
-        content: content.trim(),
-      }
+      if (!['user', 'assistant', 'system'].includes(role)) return null
+      if (!content.trim()) return null
+
+      return { role, content: content.trim() }
     })
-    .filter((message): message is ChatMessage => Boolean(message?.content))
+    .filter(Boolean) as ChatMessage[]
 }
 
 export async function POST(req: Request) {
   try {
-    if (!process.env.OPENAI_API_KEY) {
+    const apiKey = process.env.OPENAI_API_KEY
+    const baseURL = process.env.OPENAI_BASE_URL || 'https://api.deepseek.com/v1'
+    const modelName = process.env.MODEL_NAME || 'deepseek-chat'
+
+    if (!apiKey) {
       return Response.json(
-        { error: '请在 Vercel 环境变量中配置 OPENAI_API_KEY。' },
+        { error: 'Missing OPENAI_API_KEY in Vercel environment variables.' },
         { status: 500 }
       )
     }
@@ -53,13 +42,13 @@ export async function POST(req: Request) {
     const messages = normalizeMessages(body.messages)
 
     if (!messages.length) {
-      return Response.json({ error: '消息不能为空。' }, { status: 400 })
+      return Response.json({ error: 'Message cannot be empty.' }, { status: 400 })
     }
 
     const response = await fetch(`${baseURL.replace(/\/$/, '')}/chat/completions`, {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+        Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -68,7 +57,7 @@ export async function POST(req: Request) {
           {
             role: 'system',
             content:
-              '你是 NexusAI 的智能助手，由 DeepSeek 提供支持。请用中文友好、专业、简洁地回答用户问题。',
+              'You are NexusAI, a helpful AI assistant powered by DeepSeek. Reply clearly and helpfully.',
           },
           ...messages,
         ],
@@ -79,27 +68,37 @@ export async function POST(req: Request) {
     const data = await response.json().catch(() => null)
 
     if (!response.ok) {
-      const message =
-        data?.error?.message ||
-        data?.message ||
-        `DeepSeek API 请求失败，状态码 ${response.status}`
-
-      return Response.json({ error: message }, { status: response.status })
+      return Response.json(
+        {
+          error:
+            data?.error?.message ||
+            data?.message ||
+            `DeepSeek API request failed with status ${response.status}`,
+        },
+        { status: response.status }
+      )
     }
 
     const text = data?.choices?.[0]?.message?.content
 
     if (!text) {
-      return Response.json({ error: 'DeepSeek 没有返回可显示的回复。' }, { status: 502 })
+      return Response.json(
+        { error: 'DeepSeek returned no visible message.' },
+        { status: 502 }
+      )
     }
 
     return Response.json({ text })
   } catch (error) {
     console.error('[chat-api] Chat API error:', error)
-    const message = error instanceof Error ? error.message : '未知错误'
 
     return Response.json(
-      { error: `聊天服务出错：${message}` },
+      {
+        error:
+          error instanceof Error
+            ? `Chat service error: ${error.message}`
+            : 'Unknown chat service error.',
+      },
       { status: 500 }
     )
   }
