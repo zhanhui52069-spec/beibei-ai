@@ -1,8 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { useChat } from '@ai-sdk/react'
-import { DefaultChatTransport } from 'ai'
 import Link from 'next/link'
 import { AlertCircle, ArrowLeft, Bot, Loader2, Send, Sparkles, Trash2, User } from 'lucide-react'
 
@@ -12,25 +10,33 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
 
+type ChatMessage = {
+  id: string
+  role: 'user' | 'assistant'
+  content: string
+}
+
+function createMessage(role: ChatMessage['role'], content: string): ChatMessage {
+  return {
+    id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+    role,
+    content,
+  }
+}
+
 export default function ChatPage() {
   const [input, setInput] = useState('')
+  const [messages, setMessages] = useState<ChatMessage[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-
-  const { messages, sendMessage, status, setMessages, error } = useChat({
-    transport: new DefaultChatTransport({ api: '/api/chat' }),
-    onError: (err) => {
-      console.error('[chat] Chat error:', err)
-    },
-  })
-
-  const isLoading = status === 'streaming' || status === 'submitted'
 
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
-  }, [messages])
+  }, [messages, isLoading, error])
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -39,12 +45,48 @@ export default function ChatPage() {
     }
   }, [input])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!input.trim() || isLoading) return
 
-    sendMessage({ text: input })
+    const text = input.trim()
+    if (!text || isLoading) return
+
+    const userMessage = createMessage('user', text)
+    const nextMessages = [...messages, userMessage]
+
+    setMessages(nextMessages)
     setInput('')
+    setError(null)
+    setIsLoading(true)
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: nextMessages.map((message) => ({
+            role: message.role,
+            content: message.content,
+          })),
+        }),
+      })
+
+      const data = await response.json().catch(() => null)
+
+      if (!response.ok) {
+        throw new Error(data?.error || `请求失败，状态码 ${response.status}`)
+      }
+
+      if (!data?.text) {
+        throw new Error('接口没有返回可显示的回复')
+      }
+
+      setMessages((current) => [...current, createMessage('assistant', data.text)])
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '聊天请求失败，请稍后重试')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -73,9 +115,12 @@ export default function ChatPage() {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => setMessages([])}
+          onClick={() => {
+            setMessages([])
+            setError(null)
+          }}
           className="text-muted-foreground hover:text-foreground"
-          disabled={messages.length === 0}
+          disabled={messages.length === 0 && !error}
         >
           <Trash2 className="h-5 w-5" />
         </Button>
@@ -138,19 +183,11 @@ export default function ChatPage() {
                         : 'border border-border/50 bg-card'
                     )}
                   >
-                    <div className="prose prose-sm prose-invert max-w-none">
-                      {message.parts.map((part, index) =>
-                        part.type === 'text' ? (
-                          <p key={index} className="m-0 whitespace-pre-wrap">
-                            {part.text}
-                          </p>
-                        ) : null
-                      )}
-                    </div>
+                    <p className="m-0 whitespace-pre-wrap text-sm leading-relaxed">{message.content}</p>
                   </div>
                 </div>
               ))}
-              {isLoading && messages[messages.length - 1]?.role === 'user' && (
+              {isLoading && (
                 <div className="flex gap-4">
                   <Avatar className="h-8 w-8 shrink-0">
                     <AvatarFallback className="bg-accent text-accent-foreground">
@@ -162,20 +199,19 @@ export default function ChatPage() {
                   </div>
                 </div>
               )}
-              {error && (
-                <div className="flex gap-4">
-                  <Avatar className="h-8 w-8 shrink-0">
-                    <AvatarFallback className="bg-destructive/20 text-destructive">
-                      <AlertCircle className="h-4 w-4" />
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="rounded-2xl border border-destructive/20 bg-destructive/10 px-4 py-3">
-                    <p className="text-sm text-destructive">
-                      出错了：{error.message || '请稍后重试'}
-                    </p>
-                  </div>
-                </div>
-              )}
+            </div>
+          )}
+
+          {error && (
+            <div className="mt-6 flex gap-4">
+              <Avatar className="h-8 w-8 shrink-0">
+                <AvatarFallback className="bg-destructive/20 text-destructive">
+                  <AlertCircle className="h-4 w-4" />
+                </AvatarFallback>
+              </Avatar>
+              <div className="rounded-2xl border border-destructive/20 bg-destructive/10 px-4 py-3">
+                <p className="text-sm text-destructive">出错了：{error}</p>
+              </div>
             </div>
           )}
         </div>
