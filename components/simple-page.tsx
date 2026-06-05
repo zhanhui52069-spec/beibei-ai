@@ -26,8 +26,9 @@ export function SimplePage({
   ctaHref = "/chat",
 }: SimplePageProps) {
   return (
-    <main className="min-h-screen bg-background">
-      <header className="border-b border-border/50 bg-background/80 backdrop-blur-xl">
+    <main className="relative min-h-screen overflow-hidden bg-background">
+      <div className="ambient-grid absolute inset-0 opacity-60" />
+      <header className="relative border-b border-white/10 bg-background/72 backdrop-blur-2xl">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent">
@@ -44,8 +45,8 @@ export function SimplePage({
         </div>
       </header>
 
-      <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-24">
-        <div className="max-w-3xl">
+      <section className="relative mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-24">
+        <div className="soft-reveal max-w-3xl">
           <p className="text-sm font-semibold uppercase tracking-wider text-accent">{eyebrow}</p>
           <h1 className="mt-3 text-balance text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
             {title}
@@ -66,7 +67,7 @@ export function SimplePage({
           {sections.map((section) => (
             <article
               key={section.title}
-              className="rounded-xl border border-border/50 bg-card/50 p-6"
+              className="surface-lift rounded-lg border border-border/50 bg-card/55 p-6 backdrop-blur-xl"
             >
               <h2 className="text-lg font-semibold text-foreground">{section.title}</h2>
               <p className="mt-3 text-sm leading-7 text-muted-foreground">{section.body}</p>

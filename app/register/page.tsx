@@ -48,11 +48,8 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
-      {/* Background */}
-      <div className="fixed inset-0 -z-10">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[600px] w-[600px] rounded-full bg-accent/10 blur-[120px]" />
-      </div>
+    <div className="relative flex min-h-screen flex-col overflow-hidden bg-background">
+      <div className="ambient-grid fixed inset-0 opacity-60" />
 
       {/* Header */}
       <header className="flex h-16 items-center px-4">
@@ -65,7 +62,7 @@ export default function RegisterPage() {
 
       {/* Form */}
       <main className="flex flex-1 items-center justify-center px-4 py-8">
-        <div className="w-full max-w-sm">
+        <div className="glass-panel soft-reveal w-full max-w-sm rounded-lg border p-6">
           <div className="mb-8 text-center">
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-accent">
               <Sparkles className="h-8 w-8 text-accent-foreground" />

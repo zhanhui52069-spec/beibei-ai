@@ -97,8 +97,9 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex h-screen flex-col bg-background">
-      <header className="flex h-16 shrink-0 items-center justify-between border-b border-border/50 bg-background/80 px-4 backdrop-blur-xl">
+    <div className="relative flex h-screen flex-col overflow-hidden bg-background">
+      <div className="ambient-grid pointer-events-none absolute inset-0 opacity-35" />
+      <header className="relative z-10 flex h-16 shrink-0 items-center justify-between border-b border-white/10 bg-background/72 px-4 backdrop-blur-2xl">
         <div className="flex items-center gap-4">
           <Link href="/">
             <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
@@ -126,7 +127,7 @@ export default function ChatPage() {
         </Button>
       </header>
 
-      <ScrollArea ref={scrollRef} className="flex-1 overflow-y-auto">
+      <ScrollArea ref={scrollRef} className="relative z-10 flex-1 overflow-y-auto">
         <div className="mx-auto max-w-3xl px-4 py-8">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -177,10 +178,10 @@ export default function ChatPage() {
                   </Avatar>
                   <div
                     className={cn(
-                      'max-w-[85%] rounded-2xl px-4 py-3',
+                      'max-w-[85%] rounded-lg px-4 py-3',
                       message.role === 'user'
                         ? 'bg-foreground text-background'
-                        : 'border border-border/50 bg-card'
+                        : 'border border-border/50 bg-card/70 backdrop-blur-xl'
                     )}
                   >
                     <p className="m-0 whitespace-pre-wrap text-sm leading-relaxed">{message.content}</p>
@@ -194,7 +195,7 @@ export default function ChatPage() {
                       <Bot className="h-4 w-4" />
                     </AvatarFallback>
                   </Avatar>
-                  <div className="rounded-2xl border border-border/50 bg-card px-4 py-3">
+                  <div className="rounded-lg border border-border/50 bg-card/70 px-4 py-3 backdrop-blur-xl">
                     <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
                   </div>
                 </div>
@@ -209,7 +210,7 @@ export default function ChatPage() {
                   <AlertCircle className="h-4 w-4" />
                 </AvatarFallback>
               </Avatar>
-              <div className="rounded-2xl border border-destructive/20 bg-destructive/10 px-4 py-3">
+              <div className="rounded-lg border border-destructive/20 bg-destructive/10 px-4 py-3">
                 <p className="text-sm text-destructive">出错了：{error}</p>
               </div>
             </div>
@@ -217,9 +218,9 @@ export default function ChatPage() {
         </div>
       </ScrollArea>
 
-      <div className="shrink-0 border-t border-border/50 bg-background/80 p-4 backdrop-blur-xl">
+      <div className="relative z-10 shrink-0 border-t border-white/10 bg-background/72 p-4 backdrop-blur-2xl">
         <form onSubmit={handleSubmit} className="mx-auto max-w-3xl">
-          <div className="relative flex items-end gap-2 rounded-2xl border border-border/50 bg-card p-2">
+          <div className="glass-panel relative flex items-end gap-2 rounded-lg border p-2">
             <Textarea
               ref={textareaRef}
               value={input}

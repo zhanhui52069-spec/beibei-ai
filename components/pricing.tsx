@@ -74,10 +74,10 @@ export function Pricing() {
           {plans.map((plan, index) => (
             <div
               key={index}
-              className={`relative rounded-2xl border p-8 ${
+              className={`surface-lift relative rounded-lg border p-8 backdrop-blur-xl ${
                 plan.popular
-                  ? "border-accent bg-card shadow-lg shadow-accent/10"
-                  : "border-border/50 bg-card/50"
+                  ? "border-accent/60 bg-card/80 hairline-glow"
+                  : "border-border/50 bg-card/55"
               }`}
             >
               {plan.popular && (
@@ -111,7 +111,7 @@ export function Pricing() {
                 <Button
                   className={`w-full ${
                     plan.popular
-                      ? "bg-accent text-accent-foreground hover:bg-accent/90"
+                      ? "bg-accent text-accent-foreground shadow-[0_0_24px_rgba(78,151,255,0.22)] hover:bg-accent/90"
                       : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
                   }`}
                 >

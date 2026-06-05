@@ -55,9 +55,10 @@ export function Features() {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="group relative rounded-2xl border border-border/50 bg-card/50 p-6 transition-all hover:border-accent/50 hover:bg-card"
+              className="surface-lift group relative rounded-lg border border-border/50 bg-card/55 p-6 backdrop-blur-xl"
+              style={{ animationDelay: `${index * 70}ms` }}
             >
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 text-accent transition-colors group-hover:bg-accent/20">
+              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-accent/10 text-accent transition-colors group-hover:bg-accent/20">
                 <feature.icon className="h-6 w-6" />
               </div>
               <h3 className="mb-2 text-lg font-semibold text-foreground">
