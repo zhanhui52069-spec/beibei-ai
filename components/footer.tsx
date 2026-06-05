@@ -3,27 +3,27 @@ import { Sparkles } from "lucide-react";
 
 const footerLinks = {
   产品: [
-    { name: "功能介绍", href: "#features" },
-    { name: "价格方案", href: "#pricing" },
-    { name: "API 文档", href: "#" },
-    { name: "更新日志", href: "#" },
+    { name: "功能介绍", href: "/#features" },
+    { name: "价格方案", href: "/#pricing" },
+    { name: "使用文档", href: "/docs" },
+    { name: "立即体验", href: "/chat" },
   ],
   公司: [
-    { name: "关于我们", href: "#" },
-    { name: "博客", href: "#" },
-    { name: "加入我们", href: "#" },
-    { name: "联系我们", href: "#" },
+    { name: "关于我们", href: "/about" },
+    { name: "博客", href: "/blog" },
+    { name: "联系我们", href: "/contact" },
+    { name: "预约演示", href: "/contact" },
   ],
   资源: [
-    { name: "帮助中心", href: "#" },
-    { name: "开发者文档", href: "#" },
-    { name: "社区论坛", href: "#" },
-    { name: "合作伙伴", href: "#" },
+    { name: "帮助中心", href: "/docs" },
+    { name: "开发者文档", href: "/docs" },
+    { name: "使用案例", href: "/blog" },
+    { name: "合作伙伴", href: "/contact" },
   ],
   法律: [
-    { name: "服务条款", href: "#" },
-    { name: "隐私政策", href: "#" },
-    { name: "Cookie 政策", href: "#" },
+    { name: "服务条款", href: "/terms" },
+    { name: "隐私政策", href: "/privacy" },
+    { name: "Cookie 政策", href: "/privacy" },
   ],
 };
 

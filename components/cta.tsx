@@ -31,13 +31,15 @@ export function CTA() {
                     <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </Button>
                 </Link>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="w-full border-border/50 bg-transparent text-foreground hover:bg-secondary sm:w-auto"
-                >
-                  预约演示
-                </Button>
+                <Link href="/contact">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="w-full border-border/50 bg-transparent text-foreground hover:bg-secondary sm:w-auto"
+                  >
+                    预约演示
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>

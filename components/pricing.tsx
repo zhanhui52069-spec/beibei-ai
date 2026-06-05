@@ -47,6 +47,7 @@ const plans = [
       "7x24 小时支持",
     ],
     cta: "联系销售",
+    href: "/contact",
     popular: false,
   },
 ];
@@ -106,7 +107,7 @@ export function Pricing() {
                 ))}
               </ul>
 
-              <Link href={plan.name === "企业版" ? "#" : "/chat"}>
+              <Link href={plan.name === "企业版" ? "/contact" : "/chat"}>
                 <Button
                   className={`w-full ${
                     plan.popular

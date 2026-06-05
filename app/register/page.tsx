@@ -164,9 +164,9 @@ export default function RegisterPage() {
 
           <p className="mt-6 text-center text-xs text-muted-foreground">
             点击创建账户，即表示您同意我们的{' '}
-            <Link href="#" className="text-accent hover:underline">服务条款</Link>
+            <Link href="/terms" className="text-accent hover:underline">服务条款</Link>
             {' '}和{' '}
-            <Link href="#" className="text-accent hover:underline">隐私政策</Link>
+            <Link href="/privacy" className="text-accent hover:underline">隐私政策</Link>
           </p>
         </div>
       </main>

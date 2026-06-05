@@ -7,10 +7,10 @@ import { Menu, Sparkles, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
-  { name: "功能", href: "#features" },
-  { name: "价格", href: "#pricing" },
-  { name: "文档", href: "#docs" },
-  { name: "博客", href: "#blog" },
+  { name: "功能", href: "/#features" },
+  { name: "价格", href: "/#pricing" },
+  { name: "文档", href: "/docs" },
+  { name: "博客", href: "/blog" },
 ];
 
 export function Navbar() {

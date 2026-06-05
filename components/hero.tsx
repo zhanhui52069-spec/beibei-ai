@@ -40,14 +40,16 @@ export function Hero() {
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
-            <Button
-              variant="outline"
-              size="lg"
-              className="w-full border-border/50 bg-transparent text-foreground hover:bg-secondary sm:w-auto"
-            >
-              <Play className="mr-2 h-4 w-4" />
-              观看演示
-            </Button>
+            <Link href="/docs">
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full border-border/50 bg-transparent text-foreground hover:bg-secondary sm:w-auto"
+              >
+                <Play className="mr-2 h-4 w-4" />
+                观看演示
+              </Button>
+            </Link>
           </div>
 
           <div className="mt-16">
