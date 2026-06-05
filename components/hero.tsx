@@ -1,9 +1,14 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight, Bot, Code2, FileText, Play } from "lucide-react";
 
+import { useLanguage } from "@/components/language-provider";
 import { Button } from "@/components/ui/button";
 
 export function Hero() {
+  const { t } = useLanguage();
+
   return (
     <section className="relative overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-32">
       <div className="ambient-grid absolute inset-0 -z-10" />
@@ -16,18 +21,18 @@ export function Hero() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
             </span>
-            全新 AI 模型现已上线
+            {t.hero.badge}
           </div>
 
           <h1 className="text-balance text-4xl font-bold tracking-tight text-foreground sm:text-6xl lg:text-7xl">
-            构建未来的
+            {t.hero.titleTop}
             <span className="block bg-gradient-to-b from-white via-accent to-cyan-300 bg-clip-text text-transparent">
-              AI 驱动产品
+              {t.hero.titleAccent}
             </span>
           </h1>
 
           <p className="mt-6 text-pretty text-lg leading-relaxed text-muted-foreground sm:text-xl">
-            借助先进的 AI 技术，让你的工作效率提升 10 倍。智能对话、内容创作、代码生成，一站式解决方案。
+            {t.hero.description}
           </p>
 
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -36,7 +41,7 @@ export function Hero() {
                 size="lg"
                 className="group w-full bg-foreground text-background shadow-[0_0_28px_rgba(78,151,255,0.22)] hover:bg-foreground/90 sm:w-auto"
               >
-                免费开始使用
+                {t.hero.primary}
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
@@ -47,13 +52,13 @@ export function Hero() {
                 className="w-full border-border/50 bg-transparent text-foreground hover:bg-secondary sm:w-auto"
               >
                 <Play className="mr-2 h-4 w-4" />
-                观看演示
+                {t.hero.secondary}
               </Button>
             </Link>
           </div>
 
           <div className="mt-16">
-            <p className="mb-6 text-sm text-muted-foreground">深受全球领先企业信赖</p>
+            <p className="mb-6 text-sm text-muted-foreground">{t.hero.trusted}</p>
             <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 opacity-60">
               {["Vercel", "Stripe", "Notion", "Linear", "Supabase"].map((company) => (
                 <span key={company} className="text-lg font-semibold text-foreground">
@@ -73,7 +78,7 @@ export function Hero() {
                   <div className="h-3 w-3 rounded-full bg-yellow-500/80" />
                   <div className="h-3 w-3 rounded-full bg-green-500/80" />
                 </div>
-                <span className="ml-4 text-sm text-muted-foreground">NexusAI 工作区</span>
+                <span className="ml-4 text-sm text-muted-foreground">{t.hero.workspace}</span>
               </div>
               <div className="p-6">
                 <div className="grid gap-4 md:grid-cols-3">
@@ -82,7 +87,7 @@ export function Hero() {
                       <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/15 text-accent">
                         <Bot className="h-4 w-4" />
                       </div>
-                      <span className="text-sm font-medium text-foreground">智能对话</span>
+                      <span className="text-sm font-medium text-foreground">{t.hero.chat}</span>
                     </div>
                     <div className="space-y-2">
                       <div className="h-3 w-full rounded bg-muted" />
@@ -95,7 +100,7 @@ export function Hero() {
                       <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-400/15 text-cyan-300">
                         <Code2 className="h-4 w-4" />
                       </div>
-                      <span className="text-sm font-medium text-foreground">代码生成</span>
+                      <span className="text-sm font-medium text-foreground">{t.hero.code}</span>
                     </div>
                     <div className="space-y-2">
                       <div className="h-3 w-3/4 rounded bg-accent/30" />
@@ -108,7 +113,7 @@ export function Hero() {
                       <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-400/15 text-emerald-300">
                         <FileText className="h-4 w-4" />
                       </div>
-                      <span className="text-sm font-medium text-foreground">内容创作</span>
+                      <span className="text-sm font-medium text-foreground">{t.hero.content}</span>
                     </div>
                     <div className="space-y-2">
                       <div className="h-3 w-5/6 rounded bg-emerald-300/25" />

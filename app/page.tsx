@@ -4,10 +4,12 @@ import { Features } from "@/components/features";
 import { Pricing } from "@/components/pricing";
 import { CTA } from "@/components/cta";
 import { Footer } from "@/components/footer";
+import { LanguageProvider } from "@/components/language-provider";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-background">
+    <LanguageProvider>
+      <div className="min-h-screen bg-background">
       <Navbar />
       <main>
         <Hero />
@@ -16,6 +18,7 @@ export default function Home() {
         <CTA />
       </main>
       <Footer />
-    </div>
+      </div>
+    </LanguageProvider>
   );
 }

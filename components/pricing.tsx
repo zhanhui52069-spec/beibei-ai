@@ -1,89 +1,43 @@
-import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
-import Link from "next/link";
+"use client";
 
-const plans = [
-  {
-    name: "免费版",
-    price: "¥0",
-    period: "/月",
-    description: "适合个人用户体验 AI 能力",
-    features: [
-      "每日 20 次对话",
-      "基础模型访问",
-      "标准响应速度",
-      "社区支持",
-    ],
-    cta: "免费开始",
-    popular: false,
-  },
-  {
-    name: "专业版",
-    price: "¥99",
-    period: "/月",
-    description: "适合专业人士和小团队",
-    features: [
-      "无限对话次数",
-      "所有模型访问",
-      "优先响应速度",
-      "代码生成功能",
-      "图像生成功能",
-      "邮件支持",
-    ],
-    cta: "立即订阅",
-    popular: true,
-  },
-  {
-    name: "企业版",
-    price: "定制",
-    period: "",
-    description: "适合大型企业和定制需求",
-    features: [
-      "专业版全部功能",
-      "私有化部署",
-      "自定义模型训练",
-      "API 高级访问",
-      "专属客户经理",
-      "7x24 小时支持",
-    ],
-    cta: "联系销售",
-    href: "/contact",
-    popular: false,
-  },
-];
+import Link from "next/link";
+import { Check } from "lucide-react";
+
+import { useLanguage } from "@/components/language-provider";
+import { Button } from "@/components/ui/button";
 
 export function Pricing() {
+  const { t } = useLanguage();
+
   return (
     <section id="pricing" className="py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-accent">
-            价格方案
+            {t.pricing.eyebrow}
           </h2>
           <p className="mt-2 text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            选择适合您的方案
+            {t.pricing.title}
           </p>
           <p className="mt-4 text-pretty text-lg text-muted-foreground">
-            灵活的定价策略，满足不同规模的需求
+            {t.pricing.description}
           </p>
         </div>
 
-        {/* Pricing Cards */}
         <div className="mt-16 grid gap-8 lg:grid-cols-3">
-          {plans.map((plan, index) => (
+          {t.pricing.plans.map((plan, index) => (
             <div
-              key={index}
+              key={plan.name}
               className={`surface-lift relative rounded-lg border p-8 backdrop-blur-xl ${
-                plan.popular
+                index === 1
                   ? "border-accent/60 bg-card/80 hairline-glow"
                   : "border-border/50 bg-card/55"
               }`}
             >
-              {plan.popular && (
+              {index === 1 && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                   <span className="inline-flex items-center rounded-full bg-accent px-4 py-1 text-xs font-semibold text-accent-foreground">
-                    最受欢迎
+                    {t.pricing.popular}
                   </span>
                 </div>
               )}
@@ -99,18 +53,18 @@ export function Pricing() {
               </div>
 
               <ul className="mb-8 space-y-3">
-                {plan.features.map((feature, featureIndex) => (
-                  <li key={featureIndex} className="flex items-center gap-3">
+                {plan.features.map((feature) => (
+                  <li key={feature} className="flex items-center gap-3">
                     <Check className="h-5 w-5 flex-shrink-0 text-accent" />
                     <span className="text-sm text-muted-foreground">{feature}</span>
                   </li>
                 ))}
               </ul>
 
-              <Link href={plan.name === "企业版" ? "/contact" : "/chat"}>
+              <Link href={index === 2 ? "/contact" : "/chat"}>
                 <Button
                   className={`w-full ${
-                    plan.popular
+                    index === 1
                       ? "bg-accent text-accent-foreground shadow-[0_0_24px_rgba(78,151,255,0.22)] hover:bg-accent/90"
                       : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
                   }`}

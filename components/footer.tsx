@@ -1,38 +1,42 @@
+"use client";
+
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
 
-const footerLinks = {
-  产品: [
-    { name: "功能介绍", href: "/#features" },
-    { name: "价格方案", href: "/#pricing" },
-    { name: "使用文档", href: "/docs" },
-    { name: "立即体验", href: "/chat" },
-  ],
-  公司: [
-    { name: "关于我们", href: "/about" },
-    { name: "博客", href: "/blog" },
-    { name: "联系我们", href: "/contact" },
-    { name: "预约演示", href: "/contact" },
-  ],
-  资源: [
-    { name: "帮助中心", href: "/docs" },
-    { name: "开发者文档", href: "/docs" },
-    { name: "使用案例", href: "/blog" },
-    { name: "合作伙伴", href: "/contact" },
-  ],
-  法律: [
-    { name: "服务条款", href: "/terms" },
-    { name: "隐私政策", href: "/privacy" },
-    { name: "Cookie 政策", href: "/privacy" },
-  ],
-};
+import { useLanguage } from "@/components/language-provider";
 
 export function Footer() {
+  const { t } = useLanguage();
+  const footerLinks = {
+    [t.footer.product]: [
+      { name: t.footer.links.features, href: "/#features" },
+      { name: t.footer.links.pricing, href: "/#pricing" },
+      { name: t.footer.links.docs, href: "/docs" },
+      { name: t.footer.links.chat, href: "/chat" },
+    ],
+    [t.footer.company]: [
+      { name: t.footer.links.about, href: "/about" },
+      { name: t.footer.links.blog, href: "/blog" },
+      { name: t.footer.links.contact, href: "/contact" },
+      { name: t.footer.links.demo, href: "/contact" },
+    ],
+    [t.footer.resources]: [
+      { name: t.footer.links.help, href: "/docs" },
+      { name: t.footer.links.developerDocs, href: "/docs" },
+      { name: t.footer.links.cases, href: "/blog" },
+      { name: t.footer.links.partners, href: "/contact" },
+    ],
+    [t.footer.legal]: [
+      { name: t.footer.links.terms, href: "/terms" },
+      { name: t.footer.links.privacy, href: "/privacy" },
+      { name: t.footer.links.cookies, href: "/privacy" },
+    ],
+  };
+
   return (
     <footer className="border-t border-border/50 bg-card/50">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
-          {/* Brand */}
           <div className="space-y-4">
             <Link href="/" className="flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent">
@@ -41,17 +45,16 @@ export function Footer() {
               <span className="text-xl font-bold text-foreground">NexusAI</span>
             </Link>
             <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
-              借助先进的 AI 技术，让您的工作效率提升 10 倍。
+              {t.footer.tagline}
             </p>
           </div>
 
-          {/* Links */}
-          <div className="mt-12 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0 xl:justify-end">
-            <div className="md:grid md:grid-cols-2 md:gap-8">
-              <div>
-                <h3 className="text-sm font-semibold text-foreground">产品</h3>
+          <div className="mt-12 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
+            {Object.entries(footerLinks).map(([group, links]) => (
+              <div key={group}>
+                <h3 className="text-sm font-semibold text-foreground">{group}</h3>
                 <ul className="mt-4 space-y-3">
-                  {footerLinks.产品.map((link) => (
+                  {links.map((link) => (
                     <li key={link.name}>
                       <Link
                         href={link.href}
@@ -63,61 +66,13 @@ export function Footer() {
                   ))}
                 </ul>
               </div>
-              <div className="mt-10 md:mt-0">
-                <h3 className="text-sm font-semibold text-foreground">公司</h3>
-                <ul className="mt-4 space-y-3">
-                  {footerLinks.公司.map((link) => (
-                    <li key={link.name}>
-                      <Link
-                        href={link.href}
-                        className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                      >
-                        {link.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            <div className="md:grid md:grid-cols-2 md:gap-8">
-              <div>
-                <h3 className="text-sm font-semibold text-foreground">资源</h3>
-                <ul className="mt-4 space-y-3">
-                  {footerLinks.资源.map((link) => (
-                    <li key={link.name}>
-                      <Link
-                        href={link.href}
-                        className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                      >
-                        {link.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="mt-10 md:mt-0">
-                <h3 className="text-sm font-semibold text-foreground">法律</h3>
-                <ul className="mt-4 space-y-3">
-                  {footerLinks.法律.map((link) => (
-                    <li key={link.name}>
-                      <Link
-                        href={link.href}
-                        className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                      >
-                        {link.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
 
-        {/* Bottom */}
         <div className="mt-12 border-t border-border/50 pt-8">
           <p className="text-center text-sm text-muted-foreground">
-            © {new Date().getFullYear()} NexusAI. 保留所有权利。
+            © {new Date().getFullYear()} NexusAI. {t.footer.copyright}
           </p>
         </div>
       </div>

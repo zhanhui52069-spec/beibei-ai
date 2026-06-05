@@ -5,16 +5,18 @@ import Link from "next/link";
 import { Menu, Sparkles, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-
-const navItems = [
-  { name: "功能", href: "/#features" },
-  { name: "价格", href: "/#pricing" },
-  { name: "文档", href: "/docs" },
-  { name: "博客", href: "/blog" },
-];
+import { LanguageToggle } from "@/components/language-toggle";
+import { useLanguage } from "@/components/language-provider";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useLanguage();
+  const navItems = [
+    { name: t.nav.features, href: "/#features" },
+    { name: t.nav.pricing, href: "/#pricing" },
+    { name: t.nav.docs, href: "/docs" },
+    { name: t.nav.blog, href: "/blog" },
+  ];
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-background/72 backdrop-blur-2xl">
@@ -41,12 +43,13 @@ export function Navbar() {
         <div className="hidden md:flex md:items-center md:gap-4">
           <Link href="/login">
             <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-              登录
+              {t.nav.login}
             </Button>
           </Link>
+          <LanguageToggle />
           <Link href="/chat">
             <Button size="sm" className="bg-foreground text-background hover:bg-foreground/90">
-              开始使用
+              {t.nav.start}
             </Button>
           </Link>
         </div>
@@ -54,7 +57,7 @@ export function Navbar() {
         <button
           className="md:hidden"
           onClick={() => setIsOpen(!isOpen)}
-          aria-label={isOpen ? "关闭菜单" : "打开菜单"}
+          aria-label={isOpen ? t.nav.closeMenu : t.nav.openMenu}
         >
           {isOpen ? <X className="h-6 w-6 text-foreground" /> : <Menu className="h-6 w-6 text-foreground" />}
         </button>
@@ -74,14 +77,15 @@ export function Navbar() {
               </Link>
             ))}
             <div className="mt-4 flex flex-col gap-2 border-t border-border/50 pt-4">
+              <LanguageToggle />
               <Link href="/login">
                 <Button variant="ghost" className="w-full justify-start text-muted-foreground">
-                  登录
+                  {t.nav.login}
                 </Button>
               </Link>
               <Link href="/chat">
                 <Button className="w-full bg-foreground text-background hover:bg-foreground/90">
-                  开始使用
+                  {t.nav.start}
                 </Button>
               </Link>
             </div>
