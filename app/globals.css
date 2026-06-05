@@ -222,10 +222,24 @@
   }
 }
 
+@keyframes bar-rise {
+  from {
+    opacity: 0.35;
+    transform: scaleY(0.28);
+    transform-origin: bottom;
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ambient-grid,
   .soft-reveal,
-  .sheen::after {
+  .sheen::after,
+  [style*="bar-rise"] {
     animation: none;
   }
 

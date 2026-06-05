@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, Sparkles, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { BrandMark } from "@/components/brand-mark";
 import { LanguageToggle } from "@/components/language-toggle";
 import { useLanguage } from "@/components/language-provider";
 
@@ -15,17 +16,13 @@ export function Navbar() {
     { name: t.nav.features, href: "/#features" },
     { name: t.nav.pricing, href: "/#pricing" },
     { name: t.nav.docs, href: "/docs" },
-    { name: t.nav.blog, href: "/blog" },
   ];
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-background/72 backdrop-blur-2xl">
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent">
-            <Sparkles className="h-5 w-5 text-accent-foreground" />
-          </div>
-          <span className="text-xl font-bold text-foreground">NexusAI</span>
+          <BrandMark />
         </Link>
 
         <div className="hidden md:flex md:items-center md:gap-8">

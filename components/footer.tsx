@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Sparkles } from "lucide-react";
 
+import { BrandMark } from "@/components/brand-mark";
 import { useLanguage } from "@/components/language-provider";
 
 export function Footer() {
@@ -16,14 +16,12 @@ export function Footer() {
     ],
     [t.footer.company]: [
       { name: t.footer.links.about, href: "/about" },
-      { name: t.footer.links.blog, href: "/blog" },
       { name: t.footer.links.contact, href: "/contact" },
       { name: t.footer.links.demo, href: "/contact" },
     ],
     [t.footer.resources]: [
       { name: t.footer.links.help, href: "/docs" },
       { name: t.footer.links.developerDocs, href: "/docs" },
-      { name: t.footer.links.cases, href: "/blog" },
       { name: t.footer.links.partners, href: "/contact" },
     ],
     [t.footer.legal]: [
@@ -39,10 +37,7 @@ export function Footer() {
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
           <div className="space-y-4">
             <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent">
-                <Sparkles className="h-5 w-5 text-accent-foreground" />
-              </div>
-              <span className="text-xl font-bold text-foreground">NexusAI</span>
+              <BrandMark />
             </Link>
             <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
               {t.footer.tagline}

@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { ArrowLeft, Sparkles } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
+import { BrandMark } from "@/components/brand-mark";
 import { Button } from "@/components/ui/button";
 
 type SimplePageSection = {
@@ -31,10 +32,7 @@ export function SimplePage({
       <header className="relative border-b border-white/10 bg-background/72 backdrop-blur-2xl">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent">
-              <Sparkles className="h-5 w-5 text-accent-foreground" />
-            </div>
-            <span className="text-lg font-bold text-foreground">NexusAI</span>
+            <BrandMark size="sm" />
           </Link>
           <Link href="/">
             <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">

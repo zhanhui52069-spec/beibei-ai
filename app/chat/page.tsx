@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { AlertCircle, ArrowLeft, Bot, Loader2, Send, Sparkles, Trash2, User } from 'lucide-react'
+import { AlertCircle, ArrowLeft, Bot, Loader2, Send, Trash2, User } from 'lucide-react'
 
+import { BrandMark } from '@/components/brand-mark'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -107,10 +108,7 @@ export default function ChatPage() {
             </Button>
           </Link>
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent">
-              <Sparkles className="h-5 w-5 text-accent-foreground" />
-            </div>
-            <span className="text-lg font-semibold text-foreground">NexusAI</span>
+            <BrandMark size="sm" />
           </div>
         </div>
         <Button
@@ -240,7 +238,9 @@ export default function ChatPage() {
               {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
             </Button>
           </div>
-          <p className="mt-2 text-center text-xs text-muted-foreground">由 DeepSeek AI 提供支持</p>
+          <p className="mt-2 text-center text-xs text-muted-foreground">
+            AI 可能会出错，重要内容请核对后再使用。
+          </p>
         </form>
       </div>
     </div>
