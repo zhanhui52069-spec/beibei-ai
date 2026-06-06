@@ -11,23 +11,15 @@ export function Footer() {
     [t.footer.product]: [
       { name: t.footer.links.features, href: "/#features" },
       { name: t.footer.links.pricing, href: "/#pricing" },
-      { name: t.footer.links.docs, href: "/docs" },
       { name: t.footer.links.chat, href: "/chat" },
     ],
     [t.footer.company]: [
       { name: t.footer.links.about, href: "/about" },
       { name: t.footer.links.contact, href: "/contact" },
-      { name: t.footer.links.demo, href: "/contact" },
-    ],
-    [t.footer.resources]: [
-      { name: t.footer.links.help, href: "/docs" },
-      { name: t.footer.links.developerDocs, href: "/docs" },
-      { name: t.footer.links.partners, href: "/contact" },
     ],
     [t.footer.legal]: [
       { name: t.footer.links.terms, href: "/terms" },
       { name: t.footer.links.privacy, href: "/privacy" },
-      { name: t.footer.links.cookies, href: "/privacy" },
     ],
   };
 
@@ -44,7 +36,7 @@ export function Footer() {
             </p>
           </div>
 
-          <div className="mt-12 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
+          <div className="mt-12 grid grid-cols-2 gap-8 sm:grid-cols-3 xl:col-span-2 xl:mt-0">
             {Object.entries(footerLinks).map(([group, links]) => (
               <div key={group}>
                 <h3 className="text-sm font-semibold text-foreground">{group}</h3>

@@ -23,7 +23,7 @@ export function SimplePage({
   title,
   description,
   sections,
-  ctaLabel = "开始使用",
+  ctaLabel = "Try it free",
   ctaHref = "/chat",
 }: SimplePageProps) {
   return (
@@ -37,7 +37,7 @@ export function SimplePage({
           <Link href="/">
             <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              返回首页
+              Back home
             </Button>
           </Link>
         </div>

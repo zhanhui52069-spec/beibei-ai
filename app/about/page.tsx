@@ -4,24 +4,24 @@ export default function AboutPage() {
   return (
     <SimplePage
       eyebrow="About"
-      title="关于 NexusAI"
-      description="NexusAI 是一个面向个人和小团队的 AI 助手平台，目标是让高质量智能对话变得简单、稳定、易用。"
+      title="Built for global sellers"
+      description="NexusAI helps small sellers and operators write faster for overseas buyers without opening a dozen separate tools."
       sections={[
         {
-          title: "我们的定位",
-          body: "我们专注于把 AI 对话能力包装成清晰、轻量、可持续使用的产品体验，而不是复杂的技术演示。",
+          title: "Positioning",
+          body: "We focus on practical selling tasks: listings, ad scripts, email copy, and customer support replies. The product is intentionally narrow so the output can be more useful.",
         },
         {
-          title: "适合谁使用",
-          body: "适合创作者、学生、运营、开发者、自由职业者，以及希望提高日常效率的小团队。",
+          title: "Who it is for",
+          body: "NexusAI is best for Shopify sellers, Amazon operators, Etsy sellers, TikTok Shop creators, dropshippers, and agencies serving cross-border brands.",
         },
         {
-          title: "产品原则",
-          body: "界面清晰、响应稳定、入口明确、结果可用。后续功能会围绕真实工作流逐步扩展。",
+          title: "Product principles",
+          body: "Keep the interface simple, make prompts easy to start, and help users get copy they can edit and publish quickly.",
         },
         {
-          title: "当前阶段",
-          body: "聊天功能已经接入稳定的服务端智能对话能力。账号、套餐、历史记录和更多工具能力会在后续版本逐步完善。",
+          title: "Current stage",
+          body: "The chat workflow is live. Payments, saved templates, brand voice, and team features can be added after the positioning is validated with real users.",
         },
       ]}
     />

@@ -7,9 +7,8 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'NexusAI - 智能AI助手平台',
-  description: '借助先进的AI技术，让您的工作效率提升10倍。智能对话、内容创作、代码生成一站式解决方案。',
-  generator: 'v0.app',
+  title: 'NexusAI - AI Copy Workspace for Global Sellers',
+  description: 'Create product listings, ad scripts, and customer support replies for overseas buyers.',
   icons: {
     icon: [
       {

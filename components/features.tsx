@@ -1,10 +1,10 @@
 "use client";
 
-import { Bot, Code2, FileText, Globe2, MessageSquare, Zap } from "lucide-react";
+import { Headphones, Megaphone, ShoppingBag } from "lucide-react";
 
 import { useLanguage } from "@/components/language-provider";
 
-const icons = [Bot, Code2, FileText, Globe2, MessageSquare, Zap];
+const icons = [ShoppingBag, Megaphone, Headphones];
 
 export function Features() {
   const { t } = useLanguage();

@@ -25,6 +25,13 @@ function createMessage(role: ChatMessage['role'], content: string): ChatMessage 
   }
 }
 
+const sellerPrompts = [
+  'Create an Amazon listing for a portable espresso maker. Include a title, 5 bullet points, SEO keywords, and a product description for US buyers.',
+  'Write 5 TikTok ad hooks for a posture corrector. Make them short, direct, and suitable for a 15-second video.',
+  'Draft a polite customer reply for a delayed shipment. The customer is angry and wants a refund.',
+  'Rewrite this product description for Shopify in natural American English: [paste product details here].',
+]
+
 export default function ChatPage() {
   const [input, setInput] = useState('')
   const [messages, setMessages] = useState<ChatMessage[]>([])
@@ -75,16 +82,16 @@ export default function ChatPage() {
       const data = await response.json().catch(() => null)
 
       if (!response.ok) {
-        throw new Error(data?.error || `请求失败，状态码 ${response.status}`)
+        throw new Error(data?.error || `Request failed with status ${response.status}`)
       }
 
       if (!data?.text) {
-        throw new Error('接口没有返回可显示的回复')
+        throw new Error('The chat service returned no visible reply.')
       }
 
       setMessages((current) => [...current, createMessage('assistant', data.text)])
     } catch (err) {
-      setError(err instanceof Error ? err.message : '聊天请求失败，请稍后重试')
+      setError(err instanceof Error ? err.message : 'Chat request failed. Please try again.')
     } finally {
       setIsLoading(false)
     }
@@ -132,17 +139,12 @@ export default function ChatPage() {
               <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-accent/20">
                 <Bot className="h-10 w-10 text-accent" />
               </div>
-              <h2 className="mb-2 text-2xl font-semibold text-foreground">欢迎使用 NexusAI</h2>
+              <h2 className="mb-2 text-2xl font-semibold text-foreground">Your AI workspace for global selling</h2>
               <p className="mb-8 max-w-md text-muted-foreground">
-                我是你的智能助手，可以帮你解答问题、创作内容、编写代码。有什么我可以帮你的吗？
+                Create listings, ad scripts, and customer replies for overseas buyers.
               </p>
               <div className="grid gap-3 sm:grid-cols-2">
-                {[
-                  '帮我写一封商务邮件',
-                  '解释量子计算的原理',
-                  '生成一个 React 组件',
-                  '给我一个产品增长方案',
-                ].map((suggestion) => (
+                {sellerPrompts.map((suggestion) => (
                   <button
                     key={suggestion}
                     onClick={() => {
@@ -209,7 +211,7 @@ export default function ChatPage() {
                 </AvatarFallback>
               </Avatar>
               <div className="rounded-lg border border-destructive/20 bg-destructive/10 px-4 py-3">
-                <p className="text-sm text-destructive">出错了：{error}</p>
+                <p className="text-sm text-destructive">Error: {error}</p>
               </div>
             </div>
           )}
@@ -224,7 +226,7 @@ export default function ChatPage() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="输入消息..."
+              placeholder="Describe your product, buyer, or customer issue..."
               disabled={isLoading}
               className="max-h-[200px] min-h-[44px] flex-1 resize-none border-0 bg-transparent px-3 py-2 text-foreground placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
               rows={1}
@@ -239,7 +241,7 @@ export default function ChatPage() {
             </Button>
           </div>
           <p className="mt-2 text-center text-xs text-muted-foreground">
-            AI 可能会出错，重要内容请核对后再使用。
+            AI can make mistakes. Review claims, compliance, and marketplace rules before publishing.
           </p>
         </form>
       </div>
