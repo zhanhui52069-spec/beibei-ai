@@ -142,8 +142,8 @@ export const dictionaries = {
     },
     hero: {
       badge: "For global sellers",
-      titleTop: "Sell overseas.",
-      titleAccent: "Write faster.",
+      titleTop: "Sell overseas",
+      titleAccent: "Write faster",
       description: "Create product listings, ad scripts, and customer replies in seconds.",
       primary: "Try it free",
       secondary: "View docs",
@@ -410,8 +410,8 @@ export const dictionaries = {
     },
     hero: {
       badge: "为跨境卖家而做",
-      titleTop: "卖向海外。",
-      titleAccent: "写得更快。",
+      titleTop: "卖向海外",
+      titleAccent: "写得更快",
       description: "快速生成商品描述、广告脚本和英文客服回复。",
       primary: "免费试用",
       secondary: "查看文档",
