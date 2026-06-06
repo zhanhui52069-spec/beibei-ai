@@ -1,7 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 import { BrandMark } from "@/components/brand-mark";
+import { LanguageToggle } from "@/components/language-toggle";
+import { useLanguage } from "@/components/language-provider";
 import { Button } from "@/components/ui/button";
 
 type SimplePageSection = {
@@ -23,9 +27,11 @@ export function SimplePage({
   title,
   description,
   sections,
-  ctaLabel = "Try it free",
+  ctaLabel,
   ctaHref = "/chat",
 }: SimplePageProps) {
+  const { t } = useLanguage();
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-background">
       <div className="ambient-grid absolute inset-0 opacity-60" />
@@ -34,12 +40,15 @@ export function SimplePage({
           <Link href="/" className="flex items-center gap-2">
             <BrandMark size="sm" />
           </Link>
-          <Link href="/">
-            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back home
-            </Button>
-          </Link>
+          <div className="flex items-center gap-2">
+            <LanguageToggle />
+            <Link href="/">
+              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                {t.page.backHome}
+              </Button>
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -55,7 +64,7 @@ export function SimplePage({
           <div className="mt-8">
             <Link href={ctaHref}>
               <Button className="bg-foreground text-background hover:bg-foreground/90">
-                {ctaLabel}
+                {ctaLabel ?? t.page.tryFree}
               </Button>
             </Link>
           </div>

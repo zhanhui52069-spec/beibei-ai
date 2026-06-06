@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { AlertCircle, ArrowLeft, Bot, Loader2, Send, Trash2, User } from 'lucide-react'
 
 import { BrandMark } from '@/components/brand-mark'
+import { LanguageToggle } from '@/components/language-toggle'
+import { useLanguage } from '@/components/language-provider'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -25,14 +27,8 @@ function createMessage(role: ChatMessage['role'], content: string): ChatMessage 
   }
 }
 
-const sellerPrompts = [
-  'Create an Amazon listing for a portable espresso maker. Include a title, 5 bullet points, SEO keywords, and a product description for US buyers.',
-  'Write 5 TikTok ad hooks for a posture corrector. Make them short, direct, and suitable for a 15-second video.',
-  'Draft a polite customer reply for a delayed shipment. The customer is angry and wants a refund.',
-  'Rewrite this product description for Shopify in natural American English: [paste product details here].',
-]
-
 export default function ChatPage() {
+  const { t } = useLanguage()
   const [input, setInput] = useState('')
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -86,12 +82,12 @@ export default function ChatPage() {
       }
 
       if (!data?.text) {
-        throw new Error('The chat service returned no visible reply.')
+        throw new Error(t.chatPage.emptyReply)
       }
 
       setMessages((current) => [...current, createMessage('assistant', data.text)])
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Chat request failed. Please try again.')
+      setError(err instanceof Error ? err.message : t.chatPage.requestFailed)
     } finally {
       setIsLoading(false)
     }
@@ -118,18 +114,21 @@ export default function ChatPage() {
             <BrandMark size="sm" />
           </div>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => {
-            setMessages([])
-            setError(null)
-          }}
-          className="text-muted-foreground hover:text-foreground"
-          disabled={messages.length === 0 && !error}
-        >
-          <Trash2 className="h-5 w-5" />
-        </Button>
+        <div className="flex items-center gap-2">
+          <LanguageToggle />
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => {
+              setMessages([])
+              setError(null)
+            }}
+            className="text-muted-foreground hover:text-foreground"
+            disabled={messages.length === 0 && !error}
+          >
+            <Trash2 className="h-5 w-5" />
+          </Button>
+        </div>
       </header>
 
       <ScrollArea ref={scrollRef} className="relative z-10 flex-1 overflow-y-auto">
@@ -139,12 +138,12 @@ export default function ChatPage() {
               <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-accent/20">
                 <Bot className="h-10 w-10 text-accent" />
               </div>
-              <h2 className="mb-2 text-2xl font-semibold text-foreground">Your AI workspace for global selling</h2>
+              <h2 className="mb-2 text-2xl font-semibold text-foreground">{t.chatPage.title}</h2>
               <p className="mb-8 max-w-md text-muted-foreground">
-                Create listings, ad scripts, and customer replies for overseas buyers.
+                {t.chatPage.description}
               </p>
               <div className="grid gap-3 sm:grid-cols-2">
-                {sellerPrompts.map((suggestion) => (
+                {t.chatPage.prompts.map((suggestion) => (
                   <button
                     key={suggestion}
                     onClick={() => {
@@ -211,7 +210,9 @@ export default function ChatPage() {
                 </AvatarFallback>
               </Avatar>
               <div className="rounded-lg border border-destructive/20 bg-destructive/10 px-4 py-3">
-                <p className="text-sm text-destructive">Error: {error}</p>
+                <p className="text-sm text-destructive">
+                  {t.chatPage.errorPrefix} {error}
+                </p>
               </div>
             </div>
           )}
@@ -226,7 +227,7 @@ export default function ChatPage() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Describe your product, buyer, or customer issue..."
+              placeholder={t.chatPage.placeholder}
               disabled={isLoading}
               className="max-h-[200px] min-h-[44px] flex-1 resize-none border-0 bg-transparent px-3 py-2 text-foreground placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
               rows={1}
@@ -241,7 +242,7 @@ export default function ChatPage() {
             </Button>
           </div>
           <p className="mt-2 text-center text-xs text-muted-foreground">
-            AI can make mistakes. Review claims, compliance, and marketplace rules before publishing.
+            {t.chatPage.disclaimer}
           </p>
         </form>
       </div>

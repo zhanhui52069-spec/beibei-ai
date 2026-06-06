@@ -3,14 +3,18 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { ArrowLeft, Eye, EyeOff, Lock, Mail } from 'lucide-react'
+
 import { BrandMark } from '@/components/brand-mark'
+import { LanguageToggle } from '@/components/language-toggle'
+import { useLanguage } from '@/components/language-provider'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { ArrowLeft, Mail, Lock, Eye, EyeOff } from 'lucide-react'
 
 export default function LoginPage() {
   const router = useRouter()
+  const { t } = useLanguage()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -22,15 +26,13 @@ export default function LoginPage() {
     setError('')
     setIsLoading(true)
 
-    // 简单的演示登录逻辑
     await new Promise((resolve) => setTimeout(resolve, 1000))
 
     if (email && password) {
-      // 存储登录状态
       localStorage.setItem('nexusai_user', JSON.stringify({ email }))
       router.push('/chat')
     } else {
-      setError('请输入邮箱和密码')
+      setError(t.auth.missingLogin)
     }
 
     setIsLoading(false)
@@ -40,29 +42,29 @@ export default function LoginPage() {
     <div className="relative flex min-h-screen flex-col overflow-hidden bg-background">
       <div className="ambient-grid fixed inset-0 opacity-60" />
 
-      {/* Header */}
-      <header className="flex h-16 items-center px-4">
+      <header className="relative z-10 flex h-16 items-center justify-between px-4">
         <Link href="/">
-          <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="h-5 w-5" />
+          <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            {t.auth.backHome}
           </Button>
         </Link>
+        <LanguageToggle />
       </header>
 
-      {/* Form */}
-      <main className="flex flex-1 items-center justify-center px-4">
+      <main className="relative z-10 flex flex-1 items-center justify-center px-4">
         <div className="glass-panel soft-reveal w-full max-w-sm rounded-lg border p-6">
           <div className="mb-8 text-center">
             <div className="mb-4 flex justify-center">
               <BrandMark />
             </div>
-            <h1 className="text-2xl font-bold text-foreground">欢迎回来</h1>
-            <p className="mt-2 text-muted-foreground">登录您的 NexusAI 账户</p>
+            <h1 className="text-2xl font-bold text-foreground">{t.auth.loginTitle}</h1>
+            <p className="mt-2 text-muted-foreground">{t.auth.loginDescription}</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-foreground">邮箱</Label>
+              <Label htmlFor="email" className="text-foreground">{t.auth.email}</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
@@ -77,13 +79,13 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-foreground">密码</Label>
+              <Label htmlFor="password" className="text-foreground">{t.auth.password}</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="输入密码"
+                  placeholder={t.auth.passwordPlaceholder}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="border-border/50 bg-card pl-10 pr-10 text-foreground placeholder:text-muted-foreground"
@@ -92,29 +94,28 @@ export default function LoginPage() {
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
             </div>
 
-            {error && (
-              <p className="text-sm text-red-500">{error}</p>
-            )}
+            {error && <p className="text-sm text-red-500">{error}</p>}
 
             <Button
               type="submit"
               className="w-full bg-foreground text-background hover:bg-foreground/90"
               disabled={isLoading}
             >
-              {isLoading ? '登录中...' : '登录'}
+              {isLoading ? t.auth.loggingIn : t.auth.loginButton}
             </Button>
           </form>
 
           <div className="mt-6 text-center text-sm text-muted-foreground">
-            还没有账户？{' '}
+            {t.auth.noAccount}{' '}
             <Link href="/register" className="text-accent hover:underline">
-              立即注册
+              {t.auth.createAccountLink}
             </Link>
           </div>
 
@@ -124,7 +125,7 @@ export default function LoginPage() {
                 <div className="w-full border-t border-border/50" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">或者</span>
+                <span className="bg-background px-2 text-muted-foreground">{t.auth.or}</span>
               </div>
             </div>
             <Button
@@ -132,7 +133,7 @@ export default function LoginPage() {
               className="mt-4 w-full border-border/50 bg-transparent text-foreground hover:bg-secondary"
               onClick={() => router.push('/chat')}
             >
-              直接体验（无需登录）
+              {t.auth.guestAccess}
             </Button>
           </div>
         </div>
