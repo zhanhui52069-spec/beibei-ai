@@ -10,63 +10,58 @@ export function Pricing() {
   const { t } = useLanguage();
 
   return (
-    <section id="pricing" className="py-24 sm:py-32">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section id="pricing" className="border-t border-white/8 py-20 sm:py-28">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-accent">
-            {t.pricing.eyebrow}
-          </h2>
-          <p className="mt-2 text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <p className="text-sm font-medium text-accent">{t.pricing.eyebrow}</p>
+          <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-foreground sm:text-5xl">
             {t.pricing.title}
-          </p>
-          <p className="mt-4 text-pretty text-lg text-muted-foreground">
+          </h2>
+          <p className="mt-5 text-pretty text-base leading-7 text-muted-foreground sm:text-lg">
             {t.pricing.description}
           </p>
         </div>
 
-        <div className="mt-16 grid gap-8 lg:grid-cols-3">
+        <div className="mt-14 grid gap-4 lg:grid-cols-3">
           {t.pricing.plans.map((plan, index) => (
             <div
               key={plan.name}
-              className={`surface-lift relative rounded-lg border p-8 backdrop-blur-xl ${
-                index === 1
-                  ? "border-accent/60 bg-card/80 hairline-glow"
-                  : "border-border/50 bg-card/55"
+              className={`rounded-lg border p-6 ${
+                index === 1 ? "border-white/18 bg-white/[0.07]" : "border-white/10 bg-white/[0.03]"
               }`}
             >
-              {index === 1 && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <span className="inline-flex items-center rounded-full bg-accent px-4 py-1 text-xs font-semibold text-accent-foreground">
+              <div className="flex min-h-10 items-start justify-between gap-3">
+                <div>
+                  <h3 className="text-lg font-medium text-foreground">{plan.name}</h3>
+                  <p className="mt-1 text-sm leading-6 text-muted-foreground">{plan.description}</p>
+                </div>
+                {index === 1 && (
+                  <span className="rounded-full bg-foreground px-3 py-1 text-xs font-medium text-background">
                     {t.pricing.popular}
                   </span>
-                </div>
-              )}
-
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-foreground">{plan.name}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">{plan.description}</p>
+                )}
               </div>
 
-              <div className="mb-6">
-                <span className="text-4xl font-bold text-foreground">{plan.price}</span>
+              <div className="mt-8">
+                <span className="text-4xl font-semibold text-foreground">{plan.price}</span>
                 <span className="text-muted-foreground">{plan.period}</span>
               </div>
 
-              <ul className="mb-8 space-y-3">
+              <ul className="mt-8 space-y-3">
                 {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-center gap-3">
-                    <Check className="h-5 w-5 flex-shrink-0 text-accent" />
-                    <span className="text-sm text-muted-foreground">{feature}</span>
+                  <li key={feature} className="flex gap-3 text-sm leading-6 text-muted-foreground">
+                    <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-accent" />
+                    {feature}
                   </li>
                 ))}
               </ul>
 
-              <Link href={index === 2 ? "/contact" : "/chat"}>
+              <Link href={index === 2 ? "/contact" : "/chat"} className="mt-8 block">
                 <Button
                   className={`w-full ${
                     index === 1
-                      ? "bg-accent text-accent-foreground shadow-[0_0_24px_rgba(78,151,255,0.22)] hover:bg-accent/90"
-                      : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                      ? "bg-foreground text-background hover:bg-foreground/90"
+                      : "bg-white/[0.06] text-foreground hover:bg-white/[0.1]"
                   }`}
                 >
                   {plan.cta}

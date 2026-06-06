@@ -10,40 +10,34 @@ export function Features() {
   const { t } = useLanguage();
 
   return (
-    <section id="features" className="py-24 sm:py-32">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-accent">
-            {t.features.eyebrow}
-          </h2>
-          <p className="mt-2 text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            {t.features.title}
-          </p>
-          <p className="mt-4 text-pretty text-lg text-muted-foreground">
-            {t.features.description}
-          </p>
-        </div>
+    <section id="features" className="border-t border-white/8 py-20 sm:py-28">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
+          <div>
+            <p className="text-sm font-medium text-accent">{t.features.eyebrow}</p>
+            <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-foreground sm:text-5xl">
+              {t.features.title}
+            </h2>
+            <p className="mt-5 text-pretty text-base leading-7 text-muted-foreground sm:text-lg">
+              {t.features.description}
+            </p>
+          </div>
 
-        <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {t.features.items.map((feature, index) => {
-            const FeatureIcon = icons[index];
+          <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2">
+            {t.features.items.map((feature, index) => {
+              const FeatureIcon = icons[index];
 
-            return (
-              <div
-                key={feature.title}
-                className="surface-lift group relative rounded-lg border border-border/50 bg-card/55 p-6 backdrop-blur-xl"
-                style={{ animationDelay: `${index * 70}ms` }}
-              >
-                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-accent/10 text-accent transition-colors group-hover:bg-accent/20">
-                  <FeatureIcon className="h-6 w-6" />
+              return (
+                <div key={feature.title} className="group">
+                  <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/[0.04] text-accent">
+                    <FeatureIcon className="h-4 w-4" />
+                  </div>
+                  <h3 className="text-base font-medium text-foreground">{feature.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">{feature.description}</p>
                 </div>
-                <h3 className="mb-2 text-lg font-semibold text-foreground">{feature.title}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  {feature.description}
-                </p>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>
