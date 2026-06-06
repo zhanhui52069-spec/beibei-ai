@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 import { useLanguage } from "@/components/language-provider";
 import { Button } from "@/components/ui/button";
@@ -18,20 +18,11 @@ export function CTA() {
         <p className="mx-auto mt-5 max-w-xl text-pretty text-base leading-7 text-muted-foreground sm:text-lg">
           {t.cta.description}
         </p>
-        <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
+        <div className="mt-9 flex justify-center">
           <Link href="/chat">
             <Button size="lg" className="group w-full bg-foreground text-background hover:bg-foreground/90 sm:w-auto">
               {t.cta.primary}
               <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Button>
-          </Link>
-          <Link href="/contact">
-            <Button
-              variant="ghost"
-              size="lg"
-              className="w-full text-muted-foreground hover:bg-white/[0.04] hover:text-foreground sm:w-auto"
-            >
-              {t.cta.secondary}
             </Button>
           </Link>
         </div>

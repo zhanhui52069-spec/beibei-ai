@@ -13,12 +13,11 @@ export const dictionaries = {
       language: "Language",
     },
     hero: {
-      badge: "Global AI workspace is live",
-      titleTop: "A calmer way to",
-      titleAccent: "think, write, and build",
-      description:
-        "NexusAI gives creators, founders, and teams a focused assistant for chat, writing, code, and planning across languages.",
-      primary: "Start chatting",
+      badge: "AI for a global night shift",
+      titleTop: "Think faster.",
+      titleAccent: "Stay focused.",
+      description: "A quiet AI workspace for writing, coding, and clear decisions.",
+      primary: "Start",
       secondary: "View docs",
       metrics: ["Multilingual UI", "Private prompts", "Fast workspace"],
       workspace: "NexusAI Control",
@@ -33,10 +32,9 @@ export const dictionaries = {
       content: "Write",
     },
     features: {
-      eyebrow: "Core Features",
-      title: "Useful AI tools without the noise",
-      description:
-        "A compact assistant experience for everyday work: fewer distractions, clearer answers, and practical workflows.",
+      eyebrow: "Essentials",
+      title: "Only what you need",
+      description: "Chat, write, and build without heavy menus or visual noise.",
       items: [
         {
           title: "Focused Chat",
@@ -117,9 +115,9 @@ export const dictionaries = {
       ],
     },
     cta: {
-      title: "Bring a cleaner AI workspace into your day",
-      description: "Start with chat today, then expand into writing, code, and team workflows.",
-      primary: "Start chatting",
+      title: "Start with one message",
+      description: "Open the workspace and ask anything.",
+      primary: "Start",
       secondary: "Contact us",
     },
     footer: {
@@ -158,12 +156,11 @@ export const dictionaries = {
       language: "语言",
     },
     hero: {
-      badge: "全球 AI 工作台已上线",
-      titleTop: "用更清爽的方式",
-      titleAccent: "思考、写作与构建",
-      description:
-        "NexusAI 为创作者、创业者和团队提供专注的智能助手，支持对话、写作、代码和跨语言规划。",
-      primary: "开始对话",
+      badge: "面向全球夜间工作的 AI",
+      titleTop: "更快思考。",
+      titleAccent: "保持专注。",
+      description: "一个安静的 AI 工作台，用于写作、代码和清晰决策。",
+      primary: "开始",
       secondary: "查看文档",
       metrics: ["多语言界面", "提示词私密", "快速工作台"],
       workspace: "NexusAI 控制台",
@@ -178,9 +175,9 @@ export const dictionaries = {
       content: "写作",
     },
     features: {
-      eyebrow: "核心功能",
-      title: "少一点噱头，多一点可用",
-      description: "面向日常工作的紧凑 AI 助手：减少干扰、回答更清楚、流程更实用。",
+      eyebrow: "核心",
+      title: "只保留真正需要的",
+      description: "对话、写作、构建，不需要沉重菜单和视觉噪音。",
       items: [
         {
           title: "专注对话",
@@ -241,9 +238,9 @@ export const dictionaries = {
       ],
     },
     cta: {
-      title: "把更清爽的 AI 工作台带进日常",
-      description: "从智能对话开始，再逐步扩展到写作、代码和团队协作。",
-      primary: "开始对话",
+      title: "从一句话开始",
+      description: "打开工作台，直接提问。",
+      primary: "开始",
       secondary: "联系我们",
     },
     footer: {

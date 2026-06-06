@@ -13,9 +13,7 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { t } = useLanguage();
   const navItems = [
-    { name: t.nav.features, href: "/#features" },
     { name: t.nav.pricing, href: "/#pricing" },
-    { name: t.nav.docs, href: "/docs" },
   ];
 
   return (
@@ -38,11 +36,6 @@ export function Navbar() {
         </div>
 
         <div className="hidden md:flex md:items-center md:gap-4">
-          <Link href="/login">
-            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-              {t.nav.login}
-            </Button>
-          </Link>
           <LanguageToggle />
           <Link href="/chat">
             <Button size="sm" className="bg-foreground text-background hover:bg-foreground/90">
@@ -75,11 +68,6 @@ export function Navbar() {
             ))}
             <div className="mt-4 flex flex-col gap-2 border-t border-border/50 pt-4">
               <LanguageToggle />
-              <Link href="/login">
-                <Button variant="ghost" className="w-full justify-start text-muted-foreground">
-                  {t.nav.login}
-                </Button>
-              </Link>
               <Link href="/chat">
                 <Button className="w-full bg-foreground text-background hover:bg-foreground/90">
                   {t.nav.start}

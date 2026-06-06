@@ -23,8 +23,8 @@ export function Features() {
             </p>
           </div>
 
-          <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2">
-            {t.features.items.map((feature, index) => {
+          <div className="grid gap-x-8 gap-y-10 sm:grid-cols-3">
+            {t.features.items.slice(0, 3).map((feature, index) => {
               const FeatureIcon = icons[index];
 
               return (

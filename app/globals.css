@@ -16,7 +16,7 @@
   --secondary-foreground: oklch(0.98 0 0);
   --muted: oklch(0.16 0.01 255);
   --muted-foreground: oklch(0.65 0 0);
-  --accent: oklch(0.7 0.18 245);
+  --accent: oklch(0.76 0.19 325);
   --accent-foreground: oklch(0.98 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.98 0 0);
@@ -123,7 +123,7 @@
     @apply bg-background text-foreground;
     background-image:
       linear-gradient(to bottom, oklch(0.09 0.008 255), oklch(0.065 0.006 255)),
-      radial-gradient(circle at 50% -18%, oklch(0.64 0.11 245 / 0.12), transparent 34%);
+      radial-gradient(circle at 50% -18%, oklch(0.74 0.15 325 / 0.12), transparent 34%);
     min-height: 100vh;
   }
 }
