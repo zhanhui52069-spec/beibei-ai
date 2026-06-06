@@ -17,6 +17,7 @@ export function Navbar() {
     { name: t.nav.pricing, href: "/#pricing" },
     { name: t.nav.docs, href: "/docs" },
     { name: t.nav.contact, href: "/contact" },
+    { name: t.nav.feedback, href: "/feedback" },
   ];
 
   return (

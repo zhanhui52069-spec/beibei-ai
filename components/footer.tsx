@@ -16,6 +16,7 @@ export function Footer() {
     [t.footer.company]: [
       { name: t.footer.links.about, href: "/about" },
       { name: t.footer.links.contact, href: "/contact" },
+      { name: t.footer.links.feedback, href: "/feedback" },
     ],
     [t.footer.legal]: [
       { name: t.footer.links.terms, href: "/terms" },
@@ -59,7 +60,7 @@ export function Footer() {
 
         <div className="mt-12 border-t border-border/50 pt-8">
           <p className="text-center text-sm text-muted-foreground">
-            © {new Date().getFullYear()} NexusAI. {t.footer.copyright}
+            &copy; {new Date().getFullYear()} NexusAI. {t.footer.copyright}
           </p>
         </div>
       </div>
