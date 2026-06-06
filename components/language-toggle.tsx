@@ -19,7 +19,7 @@ export function LanguageToggle() {
       aria-label={t.nav.language}
     >
       <Globe2 className="h-4 w-4" />
-      <span className="text-xs font-medium">{locale === "en" ? "EN" : "ZH"}</span>
+      <span className="text-xs font-medium">{locale === "en" ? "English" : "中文"}</span>
     </Button>
   );
 }

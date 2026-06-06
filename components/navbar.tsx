@@ -13,7 +13,10 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { t } = useLanguage();
   const navItems = [
+    { name: t.nav.features, href: "/#features" },
     { name: t.nav.pricing, href: "/#pricing" },
+    { name: t.nav.docs, href: "/docs" },
+    { name: t.nav.contact, href: "/contact" },
   ];
 
   return (

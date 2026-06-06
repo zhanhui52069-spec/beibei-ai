@@ -6,6 +6,7 @@ export const dictionaries = {
       features: "Features",
       pricing: "Pricing",
       docs: "Docs",
+      contact: "Contact",
       login: "Log in",
       start: "Start",
       openMenu: "Open menu",
@@ -15,6 +16,81 @@ export const dictionaries = {
     page: {
       backHome: "Back home",
       tryFree: "Try it free",
+    },
+    pages: {
+      docs: {
+        eyebrow: "Docs",
+        title: "How sellers use NexusAI",
+        description:
+          "Use NexusAI to turn rough product notes into publishable copy for overseas marketplaces, ads, and customer support.",
+        sections: [
+          {
+            title: "Start with product details",
+            body: "Share the product name, target country, platform, audience, key benefits, and any claims you want to avoid. The more specific the input, the more usable the copy.",
+          },
+          {
+            title: "Generate marketplace copy",
+            body: "Ask for Amazon titles, bullet points, Shopify descriptions, Etsy listings, SEO keywords, comparison tables, or localized versions for different markets.",
+          },
+          {
+            title: "Create ads and scripts",
+            body: "Turn product benefits into TikTok hooks, short video scripts, Meta ad variations, email promos, and landing page copy.",
+          },
+          {
+            title: "Review before publishing",
+            body: "Always verify product claims, prohibited words, marketplace rules, pricing, delivery promises, and compliance-sensitive statements before using AI output.",
+          },
+        ],
+      },
+      about: {
+        eyebrow: "About",
+        title: "Built for global sellers",
+        description:
+          "NexusAI helps small sellers and operators write faster for overseas buyers without opening a dozen separate tools.",
+        sections: [
+          {
+            title: "Positioning",
+            body: "We focus on practical selling tasks: listings, ad scripts, email copy, and customer support replies. The product is intentionally narrow so the output can be more useful.",
+          },
+          {
+            title: "Who it is for",
+            body: "NexusAI is best for Shopify sellers, Amazon operators, Etsy sellers, TikTok Shop creators, dropshippers, and agencies serving cross-border brands.",
+          },
+          {
+            title: "Product principles",
+            body: "Keep the interface simple, make prompts easy to start, and help users get copy they can edit and publish quickly.",
+          },
+          {
+            title: "Current stage",
+            body: "The chat workflow is live. Payments, saved templates, brand voice, and team features can be added after the positioning is validated with real users.",
+          },
+        ],
+      },
+      contact: {
+        eyebrow: "Contact",
+        title: "Work with NexusAI",
+        description:
+          "For agencies, seller teams, and operators who want AI workflows for product copy, ads, and customer support.",
+        ctaLabel: "Try the workspace",
+        sections: [
+          {
+            title: "Seller teams",
+            body: "Use NexusAI to speed up product launches, weekly ad testing, listing rewrites, and support reply drafts.",
+          },
+          {
+            title: "Agencies",
+            body: "Create first drafts for multiple stores faster, then refine the output with each client's brand voice and compliance rules.",
+          },
+          {
+            title: "Feedback",
+            body: "If a workflow feels useful or missing, note the product type, marketplace, target country, and example prompt so it can be improved.",
+          },
+          {
+            title: "Next step",
+            body: "The fastest way to evaluate NexusAI is to open the chat page and test it with a real product or customer support issue.",
+          },
+        ],
+      },
     },
     chatPage: {
       title: "Your AI workspace for global selling",
@@ -201,6 +277,7 @@ export const dictionaries = {
       features: "功能",
       pricing: "价格",
       docs: "文档",
+      contact: "联系",
       login: "登录",
       start: "开始使用",
       openMenu: "打开菜单",
@@ -210,6 +287,78 @@ export const dictionaries = {
     page: {
       backHome: "返回首页",
       tryFree: "免费试用",
+    },
+    pages: {
+      docs: {
+        eyebrow: "文档",
+        title: "卖家如何使用 NexusAI",
+        description: "把粗略的产品信息变成可发布的海外平台文案、广告脚本和客服回复。",
+        sections: [
+          {
+            title: "从产品信息开始",
+            body: "告诉 NexusAI 产品名、目标国家、销售平台、目标买家、核心卖点，以及不能使用的敏感表述。输入越具体，结果越容易直接使用。",
+          },
+          {
+            title: "生成平台文案",
+            body: "可以生成 Amazon 标题和五点描述、Shopify 详情页、Etsy Listing、SEO 关键词、对比表，或面向不同市场的本地化版本。",
+          },
+          {
+            title: "创建广告和脚本",
+            body: "把产品卖点转换成 TikTok 开头钩子、短视频脚本、Meta 广告变体、促销邮件和落地页文案。",
+          },
+          {
+            title: "发布前核对",
+            body: "正式发布前，请检查产品声明、禁用词、平台规则、价格、物流承诺和涉及合规的敏感表达。",
+          },
+        ],
+      },
+      about: {
+        eyebrow: "关于",
+        title: "为跨境卖家而做",
+        description: "NexusAI 帮助小卖家和运营人员更快地为海外买家撰写文案，不必在多个工具之间来回切换。",
+        sections: [
+          {
+            title: "产品定位",
+            body: "我们专注真实销售任务：商品 Listing、广告脚本、邮件文案和客服回复。产品先做窄，输出才更容易有用。",
+          },
+          {
+            title: "适合谁使用",
+            body: "适合 Shopify 卖家、Amazon 运营、Etsy 卖家、TikTok Shop 创作者、Dropshipping 卖家，以及服务跨境品牌的代理团队。",
+          },
+          {
+            title: "产品原则",
+            body: "界面保持简单，提示词容易开始，帮助用户快速得到可以编辑和发布的初稿。",
+          },
+          {
+            title: "当前阶段",
+            body: "聊天工作流已经上线。支付、模板保存、品牌语气和团队功能会在真实用户验证定位后逐步加入。",
+          },
+        ],
+      },
+      contact: {
+        eyebrow: "联系",
+        title: "与 NexusAI 合作",
+        description: "面向需要商品文案、广告和客服 AI 工作流的服务商、卖家团队和运营人员。",
+        ctaLabel: "体验工作台",
+        sections: [
+          {
+            title: "卖家团队",
+            body: "用 NexusAI 加速新品发布、每周广告测试、Listing 重写和客服回复草稿。",
+          },
+          {
+            title: "服务商",
+            body: "更快为多个店铺创建初稿，再结合每个客户的品牌语气和合规规则进行精修。",
+          },
+          {
+            title: "产品反馈",
+            body: "如果某个工作流有用或缺失，请记录产品类型、销售平台、目标国家和示例提示词，方便后续优化。",
+          },
+          {
+            title: "下一步",
+            body: "最快的评估方式是打开聊天页，用一个真实产品或客服问题测试输出质量。",
+          },
+        ],
+      },
     },
     chatPage: {
       title: "面向跨境销售的 AI 工作台",
