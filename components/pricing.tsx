@@ -57,7 +57,10 @@ export function Pricing() {
                 ))}
               </ul>
 
-              <Link href={index === 2 ? "/contact" : "/chat"} className="mt-8 block">
+              <Link
+                href={index === 0 ? "/register" : index === 1 ? "/checkout?plan=pro" : "/contact"}
+                className="mt-8 block"
+              >
                 <Button
                   className={`w-full ${
                     index === 1
