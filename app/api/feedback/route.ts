@@ -1,5 +1,7 @@
 export const maxDuration = 20
 
+import { saveFeedback } from '@/lib/feedback-store'
+
 type FeedbackPayload = {
   name?: string
   email?: string
@@ -29,6 +31,11 @@ export async function POST(req: Request) {
 
     console.log('[feedback]', feedback)
 
+    const storeResult = await saveFeedback(feedback).catch((error) => {
+      console.error('[feedback] Database storage failed:', error)
+      return { stored: false, reason: 'database_storage_failed' }
+    })
+
     const webhookURL = process.env.FEEDBACK_WEBHOOK_URL
 
     if (webhookURL) {
@@ -41,7 +48,7 @@ export async function POST(req: Request) {
       })
     }
 
-    return Response.json({ ok: true })
+    return Response.json({ ok: true, stored: storeResult.stored })
   } catch (error) {
     console.error('[feedback] Feedback API error:', error)
     return Response.json({ error: 'Feedback service error.' }, { status: 500 })
