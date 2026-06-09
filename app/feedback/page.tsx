@@ -19,11 +19,25 @@ export default function FeedbackPage() {
   const [role, setRole] = useState(t.feedback.roles[0]);
   const [category, setCategory] = useState(t.feedback.categories[0]);
   const [message, setMessage] = useState("");
+  const [submitState, setSubmitState] = useState<"idle" | "sending" | "sent">("idle");
 
   useEffect(() => {
     setRole(t.feedback.roles[0]);
     setCategory(t.feedback.categories[0]);
   }, [locale, t.feedback.categories, t.feedback.roles]);
+
+  const statusText =
+    submitState === "sent"
+      ? locale === "zh"
+        ? "已收到你的反馈，可在后台意见箱查看。"
+        : "Feedback received. You can view it in the admin inbox."
+      : submitState === "sending"
+        ? locale === "zh"
+          ? "正在提交，请稍等。"
+          : "Sending. Please wait."
+        : locale === "zh"
+          ? "提交后页面会保持不变，反馈会进入后台意见箱。"
+          : "After sending, this page stays open and your feedback goes to the admin inbox.";
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-background">
@@ -68,6 +82,7 @@ export default function FeedbackPage() {
             action="/api/feedback-form"
             method="post"
             target="feedback-submit-frame"
+            onSubmit={() => setSubmitState("sending")}
             className="glass-panel soft-reveal rounded-lg border p-5 sm:p-6"
           >
             <input type="hidden" name="locale" value={locale} />
@@ -135,26 +150,41 @@ export default function FeedbackPage() {
                 id="feedback-message"
                 name="message"
                 value={message}
-                onChange={(event) => setMessage(event.target.value)}
+                onChange={(event) => {
+                  setMessage(event.target.value);
+                  if (submitState === "sent") setSubmitState("idle");
+                }}
                 placeholder={t.feedback.messagePlaceholder}
                 required
                 className="min-h-40 border-white/10 bg-background/70"
               />
             </div>
 
-            <Button
-              type="submit"
-              className="mt-5 w-full bg-foreground text-background hover:bg-foreground/90"
-            >
+            <Button type="submit" className="mt-5 w-full bg-foreground text-background hover:bg-foreground/90">
               <Send className="mr-2 h-4 w-4" />
-              {t.feedback.submit}
+              {submitState === "sending" ? (locale === "zh" ? "提交中..." : "Sending...") : t.feedback.submit}
             </Button>
-            <p className="mt-3 text-center text-xs text-muted-foreground">
-              {locale === "zh"
-                ? "提交后页面会保持不变，反馈会进入后台意见箱。"
-                : "After sending, this page stays open and your feedback goes to the admin inbox."}
+
+            <p
+              className={`mt-3 rounded-lg border p-3 text-center text-sm ${
+                submitState === "sent"
+                  ? "border-emerald-300/20 bg-emerald-300/10 text-emerald-200"
+                  : "border-white/10 bg-white/[0.035] text-muted-foreground"
+              }`}
+            >
+              {statusText}
             </p>
-            <iframe name="feedback-submit-frame" title="Feedback submit" className="hidden" />
+
+            <iframe
+              name="feedback-submit-frame"
+              title="Feedback submit"
+              className="hidden"
+              onLoad={() => {
+                if (submitState === "sending") {
+                  setSubmitState("sent");
+                }
+              }}
+            />
           </form>
         </div>
       </section>
