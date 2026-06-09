@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Inbox, Loader2, Send } from "lucide-react";
 
@@ -27,8 +27,9 @@ export default function FeedbackPage() {
     setCategory(t.feedback.categories[0]);
   }, [locale, t.feedback.categories, t.feedback.roles]);
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+  const submitFeedback = async () => {
+    if (!message.trim() || isSubmitting) return;
+
     setIsSubmitting(true);
     setStatus("idle");
 
@@ -52,6 +53,11 @@ export default function FeedbackPage() {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    void submitFeedback();
   };
 
   return (
@@ -172,7 +178,8 @@ export default function FeedbackPage() {
             )}
 
             <Button
-              type="submit"
+              type="button"
+              onClick={() => void submitFeedback()}
               disabled={isSubmitting || !message.trim()}
               className="mt-5 w-full bg-foreground text-background hover:bg-foreground/90"
             >
