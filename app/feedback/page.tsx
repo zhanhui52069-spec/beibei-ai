@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Inbox, Loader2, Send } from "lucide-react";
 
@@ -55,11 +55,6 @@ export default function FeedbackPage() {
     }
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    void submitFeedback();
-  };
-
   return (
     <main className="relative min-h-screen overflow-hidden bg-background">
       <div className="ambient-grid absolute inset-0 opacity-45" />
@@ -99,7 +94,7 @@ export default function FeedbackPage() {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="glass-panel soft-reveal rounded-lg border p-5 sm:p-6">
+          <div className="glass-panel soft-reveal rounded-lg border p-5 sm:p-6">
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="feedback-name">{t.feedback.name}</Label>
@@ -186,7 +181,7 @@ export default function FeedbackPage() {
               {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}
               {isSubmitting ? t.feedback.submitting : t.feedback.submit}
             </Button>
-          </form>
+          </div>
         </div>
       </section>
     </main>
