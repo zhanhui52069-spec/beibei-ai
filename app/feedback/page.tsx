@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Inbox, Loader2, Send } from "lucide-react";
+import { ArrowLeft, Inbox, Send } from "lucide-react";
 
 import { BrandMark } from "@/components/brand-mark";
 import { LanguageToggle } from "@/components/language-toggle";
@@ -20,7 +20,7 @@ export default function FeedbackPage() {
   const [category, setCategory] = useState(t.feedback.categories[0]);
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  const [notice, setNotice] = useState("");
 
   useEffect(() => {
     setRole(t.feedback.roles[0]);
@@ -31,7 +31,7 @@ export default function FeedbackPage() {
     if (!message.trim() || isSubmitting) return;
 
     setIsSubmitting(true);
-    setStatus("idle");
+    setNotice("");
 
     try {
       const response = await fetch("/api/feedback", {
@@ -44,12 +44,9 @@ export default function FeedbackPage() {
         throw new Error("Feedback request failed");
       }
 
-      setStatus("success");
-      setName("");
-      setEmail("");
-      setMessage("");
+      setNotice(locale === "zh" ? "已收到你的反馈，谢谢。" : "Feedback received. Thank you.");
     } catch {
-      setStatus("error");
+      setNotice(locale === "zh" ? "提交失败，请稍后再试。" : "Could not send feedback. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -161,16 +158,11 @@ export default function FeedbackPage() {
               />
             </div>
 
-            {status === "success" && (
-              <p className="mt-4 rounded-lg border border-emerald-300/20 bg-emerald-300/10 p-3 text-sm text-emerald-200">
-                {t.feedback.success}
+            {notice ? (
+              <p className="mt-4 rounded-lg border border-white/10 bg-white/[0.045] p-3 text-sm text-muted-foreground">
+                {notice}
               </p>
-            )}
-            {status === "error" && (
-              <p className="mt-4 rounded-lg border border-red-300/20 bg-red-300/10 p-3 text-sm text-red-200">
-                {t.feedback.error}
-              </p>
-            )}
+            ) : null}
 
             <Button
               type="button"
@@ -178,7 +170,7 @@ export default function FeedbackPage() {
               disabled={isSubmitting || !message.trim()}
               className="mt-5 w-full bg-foreground text-background hover:bg-foreground/90"
             >
-              {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}
+              <Send className="mr-2 h-4 w-4" />
               {isSubmitting ? t.feedback.submitting : t.feedback.submit}
             </Button>
           </div>
