@@ -27,19 +27,19 @@ const palettes: Record<
   }
 > = {
   china: {
-    halo: ["rgba(168, 32, 26, 0.075)", "rgba(234, 179, 8, 0.032)"],
+    halo: ["rgba(168, 32, 26, 0.11)", "rgba(234, 179, 8, 0.05)"],
     dot: "rgba(234, 179, 8, ALPHA)",
     shadow: "rgba(168, 32, 26, 0.78)",
     line: "rgba(234, 179, 8, ALPHA)",
   },
   usa: {
-    halo: ["rgba(96, 165, 250, 0.08)", "rgba(168, 85, 247, 0.035)"],
+    halo: ["rgba(96, 165, 250, 0.12)", "rgba(168, 85, 247, 0.055)"],
     dot: "rgba(96, 165, 250, ALPHA)",
     shadow: "rgba(59, 130, 246, 0.8)",
     line: "rgba(192, 132, 252, ALPHA)",
   },
   europe: {
-    halo: ["rgba(245, 158, 11, 0.075)", "rgba(16, 185, 129, 0.035)"],
+    halo: ["rgba(245, 158, 11, 0.11)", "rgba(16, 185, 129, 0.052)"],
     dot: "rgba(251, 191, 36, ALPHA)",
     shadow: "rgba(245, 158, 11, 0.76)",
     line: "rgba(52, 211, 153, ALPHA)",
@@ -94,7 +94,7 @@ export function MouseParticles() {
     const spawn = (x: number, y: number, count = 2) => {
       for (let index = 0; index < count; index += 1) {
         const angle = Math.random() * Math.PI * 2;
-        const speed = market === "usa" ? 0.9 + Math.random() * 1.5 : 0.18 + Math.random() * 0.9;
+        const speed = market === "usa" ? 0.95 + Math.random() * 1.75 : 0.22 + Math.random() * 1.05;
         const kind =
           market === "china"
             ? Math.random() > 0.72
@@ -112,16 +112,16 @@ export function MouseParticles() {
           vx: market === "usa" ? speed : Math.cos(angle) * speed,
           vy: Math.sin(angle) * speed - 0.12,
           life: 0,
-          maxLife: market === "usa" ? 24 + Math.random() * 18 : 38 + Math.random() * 28,
-          size: 0.55 + Math.random() * (kind === "trail" ? 0.9 : 1.25),
+          maxLife: market === "usa" ? 42 + Math.random() * 28 : 64 + Math.random() * 42,
+          size: 0.9 + Math.random() * (kind === "trail" ? 1.4 : 2.1),
           kind,
           rotation: Math.random() * Math.PI * 2,
           spin: (Math.random() - 0.5) * 0.045,
         });
       }
 
-      if (particles.length > 54) {
-        particles.splice(0, particles.length - 54);
+      if (particles.length > 96) {
+        particles.splice(0, particles.length - 96);
       }
     };
 
@@ -130,8 +130,8 @@ export function MouseParticles() {
       mouseY = event.clientY;
 
       const now = performance.now();
-      if (now - lastSpawn > 48) {
-        spawn(mouseX, mouseY, 1);
+      if (now - lastSpawn > 28) {
+        spawn(mouseX, mouseY, 2);
         lastSpawn = now;
       }
     };
@@ -142,12 +142,12 @@ export function MouseParticles() {
 
       context.clearRect(0, 0, width, height);
 
-      const halo = context.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 120);
+      const halo = context.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 150);
       halo.addColorStop(0, palette.halo[0]);
       halo.addColorStop(0.45, palette.halo[1]);
       halo.addColorStop(1, "rgba(0, 0, 0, 0)");
       context.fillStyle = halo;
-      context.fillRect(mouseX - 120, mouseY - 120, 240, 240);
+      context.fillRect(mouseX - 150, mouseY - 150, 300, 300);
 
       for (let index = particles.length - 1; index >= 0; index -= 1) {
         const particle = particles[index];
@@ -169,9 +169,9 @@ export function MouseParticles() {
         context.save();
         context.translate(particle.x, particle.y);
         context.rotate(particle.rotation);
-        context.fillStyle = palette.dot.replace("ALPHA", String(alpha * 0.45));
-        context.strokeStyle = palette.line.replace("ALPHA", String(alpha * 0.2));
-        context.shadowBlur = 7;
+        context.fillStyle = palette.dot.replace("ALPHA", String(alpha * 0.68));
+        context.strokeStyle = palette.line.replace("ALPHA", String(alpha * 0.32));
+        context.shadowBlur = 10;
         context.shadowColor = palette.shadow;
 
         if (particle.kind === "trail") {
@@ -205,7 +205,7 @@ export function MouseParticles() {
 
           if (distance < 82) {
             context.beginPath();
-            context.strokeStyle = palette.line.replace("ALPHA", String(alpha * (1 - distance / 82) * 0.08));
+            context.strokeStyle = palette.line.replace("ALPHA", String(alpha * (1 - distance / 82) * 0.14));
             context.lineWidth = 1;
             context.moveTo(particle.x, particle.y);
             context.lineTo(next.x, next.y);
