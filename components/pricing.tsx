@@ -26,7 +26,7 @@ export function Pricing() {
           {t.pricing.plans.map((plan, index) => (
             <div
               key={plan.name}
-              className={`group relative rounded-lg border p-6 transition duration-300 hover:-translate-y-2 hover:border-accent/55 hover:bg-white/[0.085] hover:shadow-[0_24px_80px_rgba(217,70,239,0.14)] ${
+              className={`group tech-card relative rounded-lg border p-6 transition duration-300 hover:-translate-y-2 hover:border-accent/55 hover:bg-white/[0.085] hover:shadow-[0_24px_80px_rgba(217,70,239,0.18)] ${
                 index === 1 ? "border-accent/40 bg-white/[0.07]" : "border-white/10 bg-white/[0.03]"
               }`}
             >

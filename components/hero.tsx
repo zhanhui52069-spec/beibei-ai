@@ -16,25 +16,38 @@ export function Hero() {
         style={{ backgroundImage: "url('/images/nyc-night-purple.svg')" }}
       />
       <div className="absolute inset-0 bg-black/30" />
+      <div className="tech-scan absolute inset-0 opacity-70" />
+      <div className="neon-grid absolute inset-0 opacity-50" />
       <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-b from-transparent to-background" />
 
       <div className="relative mx-auto flex min-h-[92vh] max-w-6xl items-center px-4 pt-20 sm:px-6 lg:px-8">
         <div className="soft-reveal max-w-3xl">
-          <p className="mb-5 text-sm font-medium text-fuchsia-100/80">{t.hero.badge}</p>
+          <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-fuchsia-200/18 bg-black/24 px-3 py-1 text-sm font-medium text-fuchsia-100/86 shadow-[0_0_34px_rgba(217,70,239,0.18)] backdrop-blur-xl">
+            <span className="h-1.5 w-1.5 rounded-full bg-fuchsia-200 shadow-[0_0_16px_rgba(244,114,182,0.95)]" />
+            {t.hero.badge}
+          </p>
           <h1 className="text-balance text-5xl font-semibold tracking-tight text-white sm:text-7xl lg:text-8xl">
             {t.hero.titleTop}
-            <span className="block text-fuchsia-200">{t.hero.titleAccent}</span>
+            <span className="text-glow block text-fuchsia-200">{t.hero.titleAccent}</span>
           </h1>
           <p className="mt-6 max-w-xl text-pretty text-lg leading-8 text-white/72 sm:text-xl">
             {t.hero.description}
           </p>
-          <div className="mt-9">
+          <div className="mt-9 flex flex-wrap items-center gap-4">
             <Link href="/chat">
-              <Button size="lg" className="group bg-white text-black hover:bg-white/90">
+              <Button size="lg" className="group glow-button bg-white text-black hover:bg-white/90">
                 {t.hero.primary}
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
+            <div className="hidden items-center gap-3 rounded-lg border border-white/10 bg-black/28 px-4 py-3 text-xs text-white/68 backdrop-blur-xl sm:flex">
+              {t.hero.metrics.map((metric) => (
+                <span key={metric} className="inline-flex items-center gap-2">
+                  <span className="h-1 w-1 rounded-full bg-fuchsia-200/80" />
+                  {metric}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </div>

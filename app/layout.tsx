@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { LanguageProvider } from '@/components/language-provider'
+import { MouseParticles } from '@/components/mouse-particles'
 import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"] });
@@ -39,6 +40,7 @@ export default function RootLayout({
       <body className="font-sans antialiased bg-background text-foreground">
         <LanguageProvider>
           {children}
+          <MouseParticles />
           {process.env.NODE_ENV === 'production' && <Analytics />}
         </LanguageProvider>
       </body>
