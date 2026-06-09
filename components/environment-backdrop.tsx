@@ -35,19 +35,19 @@ function ChinaScene() {
   return (
     <g stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
       <path
-        d="M0 500c120-54 226-68 318-42 92 26 174 22 246-12 112-53 222-42 330 34 80 56 176 61 288 14 94-39 180-42 258-10v136H0V500Z"
+        d="M0 502c128-38 244-42 348-12 96 28 188 20 276-24 106-53 210-48 312 14 94 57 196 62 306 14 78-34 144-38 198-14v140H0V502Z"
         fill="currentColor"
-        opacity="0.12"
+        opacity="0.1"
         strokeWidth="0"
       />
-      <path d="M102 430h472M150 394h374M202 356h270" strokeWidth="3" opacity="0.5" />
-      <path d="M126 430c42-48 92-72 150-72s108 24 150 72" strokeWidth="3" opacity="0.56" />
-      <path d="M216 356c22-42 50-64 84-64s62 22 84 64" strokeWidth="3" opacity="0.56" />
-      <path d="M184 394v84M270 356v122M356 356v122M476 394v84" strokeWidth="2" opacity="0.42" />
-      <path d="M794 466c90-80 190-118 300-114 92 3 172 32 242 86" strokeWidth="6" opacity="0.26" />
-      <path d="M832 430c70-48 146-72 228-72 76 0 146 20 210 60" strokeWidth="3" opacity="0.34" />
-      <path d="M930 388c12-30 32-46 60-48 32-2 54 14 66 48" strokeWidth="2" opacity="0.36" />
-      <path d="M96 514c136-62 250-72 342-30s188 36 288-18 202-50 306 12 238 68 408 18" strokeWidth="2" opacity="0.35" />
+      <path d="M112 476h520M156 430h430M210 392h318" strokeWidth="2.5" opacity="0.42" />
+      <path d="M142 430l86-54h230l86 54M198 392l66-42h198l66 42" strokeWidth="2.5" opacity="0.4" />
+      <path d="M176 476V430M264 476V392M366 476V392M498 476V430" strokeWidth="2" opacity="0.34" />
+      <path d="M740 470c78-82 170-122 276-120 92 2 174 36 246 102" strokeWidth="4" opacity="0.28" />
+      <path d="M786 438c62-48 132-72 210-72 74 0 142 23 204 68" strokeWidth="2.5" opacity="0.32" />
+      <path d="M850 510c86-20 174-20 264 0M124 538c154-34 296-34 426 0s262 34 396 0 298-34 494 0" strokeWidth="2" opacity="0.34" />
+      <path d="M872 224v80M930 194v110M1002 214v92M1124 188v112M1190 224v78" strokeWidth="1.5" opacity="0.16" />
+      <path d="M1090 292c18-62 10-126-24-192M1126 292c22-74 16-142-18-204M1164 294c16-54 16-108 0-162" strokeWidth="2" opacity="0.18" />
     </g>
   );
 }
@@ -94,14 +94,14 @@ function EuropeScene() {
 function ChinaMotif() {
   return (
     <g stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M72 452c76-74 126-92 184-56 34 21 72 22 118-15 62-50 128-42 190 18 56 54 118 62 206 7" />
-      <path d="M84 506c76-58 145-70 210-38 50 25 104 24 158-4 87-45 166-31 250 44" />
-      <path d="M130 310c60-25 118-25 174 0 56 25 114 25 174 0 60-25 118-25 174 0" />
-      <path d="M166 256c34-22 68-22 102 0 34 22 68 22 102 0 34-22 68-22 102 0" />
-      <path d="M684 176c18 48-5 95-54 112 52 13 82 58 72 108" />
-      <path d="M714 172c33 63 15 122-54 176" />
-      <path d="M536 154c22 48 20 94-6 138" />
-      <path d="M506 194c40-10 72-2 96 24" />
+      <path d="M82 470c90-32 178-32 264 0s174 32 264 0 176-32 264 0" />
+      <path d="M116 520c108-28 214-28 318 0s206 28 306 0" />
+      <path d="M188 364c62-56 128-84 198-84s136 28 198 84" />
+      <path d="M248 364c38-30 84-45 138-45s100 15 138 45" />
+      <path d="M128 258h338M170 218h250M224 184h144" />
+      <path d="M146 258l68-44h170l68 44M214 218l54-34h110l54 34" />
+      <path d="M632 132v338M678 154v300M724 112v352M770 174v248" opacity="0.42" />
+      <path d="M706 126c38 72 30 142-24 210M748 112c46 86 34 168-36 246" opacity="0.5" />
     </g>
   );
 }

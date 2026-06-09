@@ -12,7 +12,7 @@ type Particle = {
   life: number;
   maxLife: number;
   size: number;
-  kind: "dot" | "leaf" | "trail" | "dust";
+  kind: "dot" | "leaf" | "trail" | "dust" | "ripple";
   rotation: number;
   spin: number;
 };
@@ -27,16 +27,16 @@ const palettes: Record<
   }
 > = {
   china: {
-    halo: ["rgba(168, 32, 26, 0.11)", "rgba(234, 179, 8, 0.05)"],
-    dot: "rgba(234, 179, 8, ALPHA)",
-    shadow: "rgba(168, 32, 26, 0.78)",
-    line: "rgba(234, 179, 8, ALPHA)",
+    halo: ["rgba(132, 184, 174, 0.12)", "rgba(216, 230, 223, 0.045)"],
+    dot: "rgba(200, 228, 219, ALPHA)",
+    shadow: "rgba(112, 166, 156, 0.68)",
+    line: "rgba(178, 220, 210, ALPHA)",
   },
   usa: {
-    halo: ["rgba(96, 165, 250, 0.12)", "rgba(168, 85, 247, 0.055)"],
+    halo: ["rgba(96, 165, 250, 0.13)", "rgba(56, 189, 248, 0.055)"],
     dot: "rgba(96, 165, 250, ALPHA)",
     shadow: "rgba(59, 130, 246, 0.8)",
-    line: "rgba(192, 132, 252, ALPHA)",
+    line: "rgba(125, 211, 252, ALPHA)",
   },
   europe: {
     halo: ["rgba(245, 158, 11, 0.11)", "rgba(16, 185, 129, 0.052)"],
@@ -94,11 +94,12 @@ export function MouseParticles() {
     const spawn = (x: number, y: number, count = 2) => {
       for (let index = 0; index < count; index += 1) {
         const angle = Math.random() * Math.PI * 2;
-        const speed = market === "usa" ? 0.95 + Math.random() * 1.75 : 0.22 + Math.random() * 1.05;
+        const speed =
+          market === "usa" ? 0.95 + Math.random() * 1.75 : market === "china" ? 0.14 + Math.random() * 0.46 : 0.22 + Math.random() * 1.05;
         const kind =
           market === "china"
-            ? Math.random() > 0.72
-              ? "leaf"
+            ? Math.random() > 0.14
+              ? "ripple"
               : "dot"
             : market === "usa"
                 ? "trail"
@@ -110,10 +111,10 @@ export function MouseParticles() {
           x: x + (Math.random() - 0.5) * 12,
           y: y + (Math.random() - 0.5) * 12,
           vx: market === "usa" ? speed : Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed - 0.12,
+          vy: Math.sin(angle) * speed + (market === "china" ? 0.02 : -0.12),
           life: 0,
-          maxLife: market === "usa" ? 42 + Math.random() * 28 : 64 + Math.random() * 42,
-          size: 0.9 + Math.random() * (kind === "trail" ? 1.4 : 2.1),
+          maxLife: market === "usa" ? 42 + Math.random() * 28 : market === "china" ? 78 + Math.random() * 52 : 64 + Math.random() * 42,
+          size: kind === "ripple" ? 2.2 + Math.random() * 3.1 : 0.9 + Math.random() * (kind === "trail" ? 1.4 : 2.1),
           kind,
           rotation: Math.random() * Math.PI * 2,
           spin: (Math.random() - 0.5) * 0.045,
@@ -190,6 +191,19 @@ export function MouseParticles() {
           context.beginPath();
           context.arc(0, 0, particle.size * 0.85, 0, Math.PI * 2);
           context.fill();
+        } else if (particle.kind === "ripple") {
+          const radius = particle.size * (1.2 + progress * 5.6);
+          context.shadowBlur = 7;
+          context.beginPath();
+          context.arc(0, 0, radius, 0, Math.PI * 2);
+          context.lineWidth = 1;
+          context.strokeStyle = palette.line.replace("ALPHA", String(alpha * 0.42));
+          context.stroke();
+          context.beginPath();
+          context.arc(0, 0, radius * 0.46, 0, Math.PI * 2);
+          context.lineWidth = 0.8;
+          context.strokeStyle = palette.line.replace("ALPHA", String(alpha * 0.18));
+          context.stroke();
         } else {
           context.beginPath();
           context.arc(0, 0, particle.size, 0, Math.PI * 2);
