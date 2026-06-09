@@ -190,34 +190,43 @@
     background:
       radial-gradient(circle at 18% 18%, var(--market-glow-a), transparent 34%),
       radial-gradient(circle at 76% 12%, var(--market-glow-b), transparent 30%),
+      linear-gradient(115deg, transparent 0%, rgba(255,255,255,0.055) 48%, transparent 56%),
       linear-gradient(180deg, rgba(8, 5, 12, 0.35), rgba(7, 5, 10, 0.96)),
       url('/images/nyc-night-purple.svg') center / cover no-repeat;
+    background-size: auto, auto, 240% 100%, auto, cover;
+    animation: cinematic-drift 18s ease-in-out infinite;
     transition: background 700ms ease, filter 700ms ease;
   }
 
   :root[data-market="china"] .market-hero-backdrop {
     background:
-      radial-gradient(circle at 18% 16%, rgba(168, 32, 26, 0.54), transparent 34%),
-      radial-gradient(circle at 82% 22%, rgba(214, 164, 55, 0.3), transparent 30%),
-      linear-gradient(120deg, rgba(52, 12, 10, 0.78), rgba(7, 5, 10, 0.94) 54%, rgba(44, 24, 8, 0.74)),
-      repeating-linear-gradient(135deg, rgba(214, 164, 55, 0.07) 0 1px, transparent 1px 28px);
+      radial-gradient(circle at 18% 16%, rgba(168, 32, 26, 0.62), transparent 36%),
+      radial-gradient(circle at 78% 24%, rgba(214, 164, 55, 0.34), transparent 34%),
+      linear-gradient(115deg, transparent 0%, rgba(214, 164, 55, 0.08) 48%, transparent 58%),
+      linear-gradient(120deg, rgba(62, 13, 10, 0.88), rgba(7, 5, 10, 0.95) 52%, rgba(50, 29, 9, 0.82)),
+      repeating-linear-gradient(135deg, rgba(214, 164, 55, 0.085) 0 1px, transparent 1px 32px);
+    background-size: auto, auto, 230% 100%, auto, 180px 180px;
   }
 
   :root[data-market="usa"] .market-hero-backdrop {
     background:
       radial-gradient(circle at 22% 14%, rgba(96, 165, 250, 0.46), transparent 32%),
       radial-gradient(circle at 76% 18%, rgba(168, 85, 247, 0.38), transparent 34%),
+      linear-gradient(115deg, transparent 0%, rgba(96,165,250,0.08) 48%, transparent 58%),
       linear-gradient(180deg, rgba(4, 8, 22, 0.3), rgba(7, 5, 10, 0.92)),
       url('/images/nyc-night-purple.svg') center / cover no-repeat;
+    background-size: auto, auto, 240% 100%, auto, cover;
     filter: saturate(1.18) contrast(1.04);
   }
 
   :root[data-market="europe"] .market-hero-backdrop {
     background:
-      radial-gradient(circle at 20% 14%, rgba(245, 158, 11, 0.38), transparent 32%),
-      radial-gradient(circle at 78% 18%, rgba(16, 185, 129, 0.26), transparent 34%),
-      linear-gradient(120deg, rgba(36, 23, 8, 0.76), rgba(5, 12, 10, 0.94) 56%, rgba(6, 38, 28, 0.62)),
-      repeating-linear-gradient(90deg, rgba(251, 191, 36, 0.065) 0 1px, transparent 1px 48px);
+      radial-gradient(circle at 20% 14%, rgba(245, 158, 11, 0.48), transparent 34%),
+      radial-gradient(circle at 76% 20%, rgba(16, 185, 129, 0.32), transparent 36%),
+      linear-gradient(115deg, transparent 0%, rgba(251, 191, 36, 0.07) 48%, transparent 58%),
+      linear-gradient(120deg, rgba(42, 26, 8, 0.84), rgba(5, 12, 10, 0.95) 56%, rgba(6, 40, 30, 0.74)),
+      repeating-linear-gradient(90deg, rgba(251, 191, 36, 0.075) 0 1px, transparent 1px 54px);
+    background-size: auto, auto, 230% 100%, auto, 160px 160px;
   }
 
   .neon-grid {
@@ -242,26 +251,32 @@
     background:
       radial-gradient(circle at 20% 10%, var(--market-glow-a), transparent 34%),
       radial-gradient(circle at 78% 18%, var(--market-glow-b), transparent 32%),
-      radial-gradient(circle at 50% 100%, rgba(255, 255, 255, 0.045), transparent 36%);
+      radial-gradient(circle at 50% 100%, rgba(255, 255, 255, 0.035), transparent 36%);
     mix-blend-mode: screen;
   }
 
   .market-motif {
-    filter: drop-shadow(0 0 28px var(--market-glow-a));
+    filter: drop-shadow(0 0 20px var(--market-glow-a));
+  }
+
+  .landmark-scene {
+    opacity: 0.28;
+    filter: drop-shadow(0 0 34px var(--market-glow-a));
+    mask-image: linear-gradient(to top, black 0%, black 50%, transparent 92%);
   }
 
   :root[data-market="china"] .market-motif {
-    opacity: 0.18;
+    opacity: 0.12;
     transform: translateY(3%) scale(1.08);
   }
 
   :root[data-market="usa"] .market-motif {
-    opacity: 0.16;
+    opacity: 0.1;
     transform: translateY(4%) scale(1.02);
   }
 
   :root[data-market="europe"] .market-motif {
-    opacity: 0.17;
+    opacity: 0.11;
     transform: translateY(2%) scale(1.04);
   }
 
@@ -394,6 +409,16 @@
   }
 }
 
+@keyframes cinematic-drift {
+  0%,
+  100% {
+    background-position: center, center, 140% 0, center, center;
+  }
+  50% {
+    background-position: center, center, -60% 0, center, center;
+  }
+}
+
 @keyframes soft-reveal {
   from {
     opacity: 0;
@@ -409,6 +434,7 @@
   .ambient-grid,
   .neon-grid,
   .tech-scan,
+  .market-hero-backdrop,
   .soft-reveal {
     animation: none;
   }
