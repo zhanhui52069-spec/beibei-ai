@@ -2,16 +2,25 @@ import { saveFeedback } from '@/lib/feedback-store'
 
 export const maxDuration = 20
 
-export async function POST(req: Request) {
-  const redirectURL = new URL('/feedback', req.url)
+function html(message: string, status = 200) {
+  return new Response(
+    `<!doctype html><html><body><p>${message}</p></body></html>`,
+    {
+      status,
+      headers: {
+        'Content-Type': 'text/html; charset=utf-8',
+      },
+    },
+  )
+}
 
+export async function POST(req: Request) {
   try {
     const form = await req.formData()
     const message = String(form.get('message') || '').trim()
 
     if (!message) {
-      redirectURL.searchParams.set('error', '1')
-      return Response.redirect(redirectURL, 303)
+      return html('Message is required.', 400)
     }
 
     const feedback = {
@@ -30,11 +39,9 @@ export async function POST(req: Request) {
       console.error('[feedback-form] Database storage failed:', error)
     })
 
-    redirectURL.searchParams.set('sent', '1')
-    return Response.redirect(redirectURL, 303)
+    return html('Feedback saved.')
   } catch (error) {
     console.error('[feedback-form] Feedback form error:', error)
-    redirectURL.searchParams.set('error', '1')
-    return Response.redirect(redirectURL, 303)
+    return html('Feedback service error.', 500)
   }
 }

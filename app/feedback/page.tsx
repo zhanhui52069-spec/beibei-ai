@@ -64,7 +64,12 @@ export default function FeedbackPage() {
             </p>
           </div>
 
-          <form action="/api/feedback-form" method="post" className="glass-panel soft-reveal rounded-lg border p-5 sm:p-6">
+          <form
+            action="/api/feedback-form"
+            method="post"
+            target="feedback-submit-frame"
+            className="glass-panel soft-reveal rounded-lg border p-5 sm:p-6"
+          >
             <input type="hidden" name="locale" value={locale} />
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
@@ -144,6 +149,12 @@ export default function FeedbackPage() {
               <Send className="mr-2 h-4 w-4" />
               {t.feedback.submit}
             </Button>
+            <p className="mt-3 text-center text-xs text-muted-foreground">
+              {locale === "zh"
+                ? "提交后页面会保持不变，反馈会进入后台意见箱。"
+                : "After sending, this page stays open and your feedback goes to the admin inbox."}
+            </p>
+            <iframe name="feedback-submit-frame" title="Feedback submit" className="hidden" />
           </form>
         </div>
       </section>
