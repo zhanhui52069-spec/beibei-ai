@@ -37,6 +37,66 @@
   --sidebar-accent-foreground: oklch(0.98 0 0);
   --sidebar-border: oklch(0.22 0 0);
   --sidebar-ring: oklch(0.65 0.25 250);
+  --market-primary: #c084fc;
+  --market-primary-soft: rgba(192, 132, 252, 0.38);
+  --market-secondary: #60a5fa;
+  --market-line: rgba(216, 180, 254, 1);
+  --market-glow-a: rgba(96, 165, 250, 0.16);
+  --market-glow-b: rgba(168, 85, 247, 0.12);
+  --market-grid-a: oklch(0.9 0.13 280 / 0.08);
+  --market-grid-b: oklch(0.86 0.13 245 / 0.07);
+}
+
+:root[data-market="china"] {
+  --accent: oklch(0.68 0.18 32);
+  --ring: oklch(0.78 0.14 82);
+  --market-primary: #a8201a;
+  --market-primary-soft: rgba(168, 32, 26, 0.42);
+  --market-secondary: #d6a437;
+  --market-line: rgba(214, 164, 55, 1);
+  --market-glow-a: rgba(168, 32, 26, 0.2);
+  --market-glow-b: rgba(214, 164, 55, 0.12);
+  --market-grid-a: oklch(0.65 0.17 32 / 0.075);
+  --market-grid-b: oklch(0.78 0.14 82 / 0.07);
+}
+
+:root[data-market="japan"] {
+  --accent: oklch(0.82 0.11 350);
+  --ring: oklch(0.72 0.04 250);
+  --market-primary: #f9a8d4;
+  --market-primary-soft: rgba(249, 168, 212, 0.4);
+  --market-secondary: #cbd5e1;
+  --market-line: rgba(251, 207, 232, 1);
+  --market-glow-a: rgba(249, 168, 212, 0.18);
+  --market-glow-b: rgba(148, 163, 184, 0.11);
+  --market-grid-a: oklch(0.86 0.08 350 / 0.07);
+  --market-grid-b: oklch(0.78 0.03 250 / 0.065);
+}
+
+:root[data-market="usa"] {
+  --accent: oklch(0.76 0.19 325);
+  --ring: oklch(0.65 0.25 250);
+  --market-primary: #60a5fa;
+  --market-primary-soft: rgba(96, 165, 250, 0.4);
+  --market-secondary: #c084fc;
+  --market-line: rgba(147, 197, 253, 1);
+  --market-glow-a: rgba(96, 165, 250, 0.17);
+  --market-glow-b: rgba(168, 85, 247, 0.13);
+  --market-grid-a: oklch(0.74 0.14 250 / 0.08);
+  --market-grid-b: oklch(0.8 0.15 310 / 0.07);
+}
+
+:root[data-market="europe"] {
+  --accent: oklch(0.78 0.14 85);
+  --ring: oklch(0.7 0.14 155);
+  --market-primary: #f59e0b;
+  --market-primary-soft: rgba(245, 158, 11, 0.38);
+  --market-secondary: #10b981;
+  --market-line: rgba(251, 191, 36, 1);
+  --market-glow-a: rgba(245, 158, 11, 0.16);
+  --market-glow-b: rgba(16, 185, 129, 0.12);
+  --market-grid-a: oklch(0.78 0.14 85 / 0.075);
+  --market-grid-b: oklch(0.7 0.14 155 / 0.07);
 }
 
 .dark {
@@ -122,10 +182,11 @@
   body {
     @apply bg-background text-foreground;
     background-image:
-      radial-gradient(circle at 16% 8%, oklch(0.74 0.18 325 / 0.16), transparent 28%),
-      radial-gradient(circle at 84% 12%, oklch(0.64 0.2 275 / 0.12), transparent 26%),
+      radial-gradient(circle at 16% 8%, var(--market-glow-a), transparent 28%),
+      radial-gradient(circle at 84% 12%, var(--market-glow-b), transparent 26%),
       linear-gradient(to bottom, oklch(0.09 0.008 255), oklch(0.065 0.006 255));
     min-height: 100vh;
+    transition: background-image 700ms ease;
   }
 }
 
@@ -140,8 +201,8 @@
 
   .neon-grid {
     background-image:
-      linear-gradient(oklch(0.9 0.13 320 / 0.08) 1px, transparent 1px),
-      linear-gradient(90deg, oklch(0.86 0.13 285 / 0.07) 1px, transparent 1px);
+      linear-gradient(var(--market-grid-a) 1px, transparent 1px),
+      linear-gradient(90deg, var(--market-grid-b) 1px, transparent 1px);
     background-size: 72px 72px;
     mask-image: radial-gradient(circle at 50% 42%, black 0%, transparent 72%);
     animation: grid-drift 18s linear infinite;
@@ -149,11 +210,19 @@
 
   .tech-scan {
     background:
-      linear-gradient(110deg, transparent 0%, transparent 42%, oklch(0.85 0.14 320 / 0.12) 48%, transparent 54%, transparent 100%),
+      linear-gradient(110deg, transparent 0%, transparent 42%, var(--market-glow-a) 48%, transparent 54%, transparent 100%),
       repeating-linear-gradient(to bottom, oklch(1 0 0 / 0.035) 0 1px, transparent 1px 8px);
     background-size: 240% 100%, 100% 100%;
     mix-blend-mode: screen;
     animation: scan-sweep 7s ease-in-out infinite;
+  }
+
+  .environment-aura {
+    background:
+      radial-gradient(circle at 20% 10%, var(--market-glow-a), transparent 30%),
+      radial-gradient(circle at 78% 18%, var(--market-glow-b), transparent 28%),
+      radial-gradient(circle at 50% 100%, rgba(255, 255, 255, 0.035), transparent 36%);
+    mix-blend-mode: screen;
   }
 
   .glass-panel {
@@ -182,7 +251,7 @@
     inset: -1px;
     z-index: -1;
     background:
-      linear-gradient(115deg, transparent 0%, oklch(0.82 0.16 325 / 0.26) 38%, oklch(0.74 0.17 275 / 0.22) 50%, transparent 62%),
+      linear-gradient(115deg, transparent 0%, var(--market-glow-a) 38%, var(--market-glow-b) 50%, transparent 62%),
       linear-gradient(oklch(1 0 0 / 0.055), oklch(1 0 0 / 0.02));
     opacity: 0;
     transform: translateX(-18%);
@@ -198,8 +267,8 @@
 
   .text-glow {
     text-shadow:
-      0 0 22px oklch(0.82 0.17 325 / 0.42),
-      0 0 58px oklch(0.68 0.17 285 / 0.32);
+      0 0 22px var(--market-glow-a),
+      0 0 58px var(--market-glow-b);
   }
 
   .glow-button {
@@ -207,14 +276,14 @@
     overflow: hidden;
     box-shadow:
       0 0 0 1px oklch(1 0 0 / 0.14),
-      0 18px 52px oklch(0.73 0.18 320 / 0.24);
+      0 18px 52px var(--market-glow-a);
   }
 
   .glow-button::before {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(110deg, transparent 0%, oklch(0.9 0.11 325 / 0.5) 45%, transparent 62%);
+    background: linear-gradient(110deg, transparent 0%, var(--market-primary-soft) 45%, transparent 62%);
     transform: translateX(-120%);
     transition: transform 520ms ease;
   }

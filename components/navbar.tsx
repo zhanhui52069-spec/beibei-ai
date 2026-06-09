@@ -7,6 +7,7 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BrandMark } from "@/components/brand-mark";
 import { LanguageToggle } from "@/components/language-toggle";
+import { MarketSwitcher } from "@/components/market-switcher";
 import { useLanguage } from "@/components/language-provider";
 
 export function Navbar() {
@@ -40,6 +41,7 @@ export function Navbar() {
         </div>
 
         <div className="hidden md:flex md:items-center md:gap-4">
+          <MarketSwitcher />
           <LanguageToggle />
           <Link href="/login">
             <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
@@ -76,6 +78,7 @@ export function Navbar() {
               </Link>
             ))}
             <div className="mt-4 flex flex-col gap-2 border-t border-border/50 pt-4">
+              <MarketSwitcher />
               <LanguageToggle />
               <Link href="/login">
                 <Button variant="ghost" className="w-full justify-start text-muted-foreground">

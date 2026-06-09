@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { LanguageProvider } from '@/components/language-provider'
+import { EnvironmentBackdrop } from '@/components/environment-backdrop'
+import { MarketProvider } from '@/components/market-provider'
 import { MouseParticles } from '@/components/mouse-particles'
 import './globals.css'
 
@@ -39,8 +41,11 @@ export default function RootLayout({
     <html lang="en" className="bg-background">
       <body className="font-sans antialiased bg-background text-foreground">
         <LanguageProvider>
-          {children}
-          <MouseParticles />
+          <MarketProvider>
+            <EnvironmentBackdrop />
+            <div className="relative z-10">{children}</div>
+            <MouseParticles />
+          </MarketProvider>
           {process.env.NODE_ENV === 'production' && <Analytics />}
         </LanguageProvider>
       </body>

@@ -22,13 +22,13 @@ export function Hero() {
 
       <div className="relative mx-auto flex min-h-[92vh] max-w-6xl items-center px-4 pt-20 sm:px-6 lg:px-8">
         <div className="soft-reveal max-w-3xl">
-          <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-fuchsia-200/18 bg-black/24 px-3 py-1 text-sm font-medium text-fuchsia-100/86 shadow-[0_0_34px_rgba(217,70,239,0.18)] backdrop-blur-xl">
-            <span className="h-1.5 w-1.5 rounded-full bg-fuchsia-200 shadow-[0_0_16px_rgba(244,114,182,0.95)]" />
+          <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/24 px-3 py-1 text-sm font-medium text-white/86 shadow-[0_0_34px_var(--market-glow-a)] backdrop-blur-xl">
+            <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--market-primary)] shadow-[0_0_16px_var(--market-primary)]" />
             {t.hero.badge}
           </p>
           <h1 className="text-balance text-5xl font-semibold tracking-tight text-white sm:text-7xl lg:text-8xl">
             {t.hero.titleTop}
-            <span className="text-glow block text-fuchsia-200">{t.hero.titleAccent}</span>
+            <span className="text-glow block text-[color:var(--market-primary)]">{t.hero.titleAccent}</span>
           </h1>
           <p className="mt-6 max-w-xl text-pretty text-lg leading-8 text-white/72 sm:text-xl">
             {t.hero.description}
@@ -43,7 +43,7 @@ export function Hero() {
             <div className="hidden items-center gap-3 rounded-lg border border-white/10 bg-black/28 px-4 py-3 text-xs text-white/68 backdrop-blur-xl sm:flex">
               {t.hero.metrics.map((metric) => (
                 <span key={metric} className="inline-flex items-center gap-2">
-                  <span className="h-1 w-1 rounded-full bg-fuchsia-200/80" />
+                  <span className="h-1 w-1 rounded-full bg-[color:var(--market-primary)]" />
                   {metric}
                 </span>
               ))}
