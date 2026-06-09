@@ -12,7 +12,7 @@ type Particle = {
   life: number;
   maxLife: number;
   size: number;
-  kind: "dot" | "leaf" | "petal" | "trail" | "dust";
+  kind: "dot" | "leaf" | "trail" | "dust";
   rotation: number;
   spin: number;
 };
@@ -32,12 +32,6 @@ const palettes: Record<
     shadow: "rgba(168, 32, 26, 0.78)",
     line: "rgba(234, 179, 8, ALPHA)",
   },
-  japan: {
-    halo: ["rgba(251, 207, 232, 0.13)", "rgba(148, 163, 184, 0.05)"],
-    dot: "rgba(251, 207, 232, ALPHA)",
-    shadow: "rgba(244, 114, 182, 0.72)",
-    line: "rgba(203, 213, 225, ALPHA)",
-  },
   usa: {
     halo: ["rgba(96, 165, 250, 0.13)", "rgba(168, 85, 247, 0.06)"],
     dot: "rgba(96, 165, 250, ALPHA)",
@@ -55,7 +49,7 @@ const palettes: Record<
 function getMarket(): Market {
   const market = document.documentElement.dataset.market;
 
-  if (market === "china" || market === "japan" || market === "usa" || market === "europe") {
+  if (market === "china" || market === "usa" || market === "europe") {
     return market;
   }
 
@@ -106,11 +100,7 @@ export function MouseParticles() {
             ? Math.random() > 0.72
               ? "leaf"
               : "dot"
-            : market === "japan"
-              ? Math.random() > 0.45
-                ? "petal"
-                : "dot"
-              : market === "usa"
+            : market === "usa"
                 ? "trail"
                 : Math.random() > 0.38
                   ? "dust"
@@ -120,7 +110,7 @@ export function MouseParticles() {
           x: x + (Math.random() - 0.5) * 12,
           y: y + (Math.random() - 0.5) * 12,
           vx: market === "usa" ? speed : Math.cos(angle) * speed,
-          vy: market === "japan" ? Math.abs(Math.sin(angle) * speed) + 0.18 : Math.sin(angle) * speed - 0.12,
+          vy: Math.sin(angle) * speed - 0.12,
           life: 0,
           maxLife: market === "usa" ? 28 + Math.random() * 22 : 44 + Math.random() * 34,
           size: 0.8 + Math.random() * (kind === "trail" ? 1.2 : 1.8),
@@ -190,10 +180,6 @@ export function MouseParticles() {
           context.lineTo(particle.size * 6, 0);
           context.lineWidth = Math.max(1, particle.size);
           context.stroke();
-        } else if (particle.kind === "petal") {
-          context.beginPath();
-          context.ellipse(0, 0, particle.size * 2.4, particle.size * 1.1, 0, 0, Math.PI * 2);
-          context.fill();
         } else if (particle.kind === "leaf") {
           context.beginPath();
           context.moveTo(0, -particle.size * 3);

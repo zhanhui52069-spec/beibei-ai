@@ -6,6 +6,7 @@ import { ArrowLeft, Inbox, Send } from "lucide-react";
 
 import { BrandMark } from "@/components/brand-mark";
 import { LanguageToggle } from "@/components/language-toggle";
+import { MarketSwitcher } from "@/components/market-switcher";
 import { useLanguage } from "@/components/language-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,6 +50,7 @@ export default function FeedbackPage() {
             <BrandMark size="sm" />
           </Link>
           <div className="flex items-center gap-2">
+            <MarketSwitcher />
             <LanguageToggle />
             <Link href="/">
               <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">

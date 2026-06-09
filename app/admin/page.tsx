@@ -6,6 +6,7 @@ import { ArrowLeft, Database, Loader2, LockKeyhole, RefreshCw } from "lucide-rea
 
 import { BrandMark } from "@/components/brand-mark"
 import { LanguageToggle } from "@/components/language-toggle"
+import { MarketSwitcher } from "@/components/market-switcher"
 import { useLanguage } from "@/components/language-provider"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -145,6 +146,7 @@ export default function AdminPage() {
       <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-5">
         <BrandMark size="sm" />
         <div className="flex items-center gap-2">
+          <MarketSwitcher />
           <LanguageToggle />
           <Button asChild variant="ghost" className="text-white/70 hover:text-white">
             <Link href="/">

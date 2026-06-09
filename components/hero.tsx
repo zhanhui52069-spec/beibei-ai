@@ -11,11 +11,8 @@ export function Hero() {
 
   return (
     <section className="relative min-h-[92vh] overflow-hidden">
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: "url('/images/nyc-night-purple.svg')" }}
-      />
-      <div className="absolute inset-0 bg-black/30" />
+      <div className="market-hero-backdrop absolute inset-0" />
+      <div className="absolute inset-0 bg-black/20" />
       <div className="tech-scan absolute inset-0 opacity-70" />
       <div className="neon-grid absolute inset-0 opacity-50" />
       <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-b from-transparent to-background" />

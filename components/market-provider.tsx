@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
-export type Market = "china" | "japan" | "usa" | "europe";
+export type Market = "china" | "usa" | "europe";
 
 type MarketContextValue = {
   market: Market;
@@ -13,13 +13,12 @@ const MarketContext = createContext<MarketContextValue | null>(null);
 
 export const markets: Array<{ id: Market; label: string; shortLabel: string }> = [
   { id: "china", label: "China", shortLabel: "CN" },
-  { id: "japan", label: "Japan", shortLabel: "JP" },
   { id: "usa", label: "United States", shortLabel: "US" },
   { id: "europe", label: "Europe", shortLabel: "EU" },
 ];
 
 function isMarket(value: string | null): value is Market {
-  return value === "china" || value === "japan" || value === "usa" || value === "europe";
+  return value === "china" || value === "usa" || value === "europe";
 }
 
 export function MarketProvider({ children }: { children: React.ReactNode }) {

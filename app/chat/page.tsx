@@ -6,6 +6,7 @@ import { AlertCircle, ArrowLeft, Bot, Loader2, Send, Trash2, User } from 'lucide
 
 import { BrandMark } from '@/components/brand-mark'
 import { LanguageToggle } from '@/components/language-toggle'
+import { MarketSwitcher } from '@/components/market-switcher'
 import { useLanguage } from '@/components/language-provider'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -115,6 +116,7 @@ export default function ChatPage() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <MarketSwitcher />
           <LanguageToggle />
           <Button
             variant="ghost"

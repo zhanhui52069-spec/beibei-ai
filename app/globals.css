@@ -60,19 +60,6 @@
   --market-grid-b: oklch(0.78 0.14 82 / 0.07);
 }
 
-:root[data-market="japan"] {
-  --accent: oklch(0.82 0.11 350);
-  --ring: oklch(0.72 0.04 250);
-  --market-primary: #f9a8d4;
-  --market-primary-soft: rgba(249, 168, 212, 0.4);
-  --market-secondary: #cbd5e1;
-  --market-line: rgba(251, 207, 232, 1);
-  --market-glow-a: rgba(249, 168, 212, 0.18);
-  --market-glow-b: rgba(148, 163, 184, 0.11);
-  --market-grid-a: oklch(0.86 0.08 350 / 0.07);
-  --market-grid-b: oklch(0.78 0.03 250 / 0.065);
-}
-
 :root[data-market="usa"] {
   --accent: oklch(0.76 0.19 325);
   --ring: oklch(0.65 0.25 250);
@@ -199,6 +186,40 @@
     mask-image: linear-gradient(to bottom, black 0%, black 48%, transparent 92%);
   }
 
+  .market-hero-backdrop {
+    background:
+      radial-gradient(circle at 18% 18%, var(--market-glow-a), transparent 34%),
+      radial-gradient(circle at 76% 12%, var(--market-glow-b), transparent 30%),
+      linear-gradient(180deg, rgba(8, 5, 12, 0.35), rgba(7, 5, 10, 0.96)),
+      url('/images/nyc-night-purple.svg') center / cover no-repeat;
+    transition: background 700ms ease, filter 700ms ease;
+  }
+
+  :root[data-market="china"] .market-hero-backdrop {
+    background:
+      radial-gradient(circle at 18% 16%, rgba(168, 32, 26, 0.54), transparent 34%),
+      radial-gradient(circle at 82% 22%, rgba(214, 164, 55, 0.3), transparent 30%),
+      linear-gradient(120deg, rgba(52, 12, 10, 0.78), rgba(7, 5, 10, 0.94) 54%, rgba(44, 24, 8, 0.74)),
+      repeating-linear-gradient(135deg, rgba(214, 164, 55, 0.07) 0 1px, transparent 1px 28px);
+  }
+
+  :root[data-market="usa"] .market-hero-backdrop {
+    background:
+      radial-gradient(circle at 22% 14%, rgba(96, 165, 250, 0.46), transparent 32%),
+      radial-gradient(circle at 76% 18%, rgba(168, 85, 247, 0.38), transparent 34%),
+      linear-gradient(180deg, rgba(4, 8, 22, 0.3), rgba(7, 5, 10, 0.92)),
+      url('/images/nyc-night-purple.svg') center / cover no-repeat;
+    filter: saturate(1.18) contrast(1.04);
+  }
+
+  :root[data-market="europe"] .market-hero-backdrop {
+    background:
+      radial-gradient(circle at 20% 14%, rgba(245, 158, 11, 0.38), transparent 32%),
+      radial-gradient(circle at 78% 18%, rgba(16, 185, 129, 0.26), transparent 34%),
+      linear-gradient(120deg, rgba(36, 23, 8, 0.76), rgba(5, 12, 10, 0.94) 56%, rgba(6, 38, 28, 0.62)),
+      repeating-linear-gradient(90deg, rgba(251, 191, 36, 0.065) 0 1px, transparent 1px 48px);
+  }
+
   .neon-grid {
     background-image:
       linear-gradient(var(--market-grid-a) 1px, transparent 1px),
@@ -219,10 +240,44 @@
 
   .environment-aura {
     background:
-      radial-gradient(circle at 20% 10%, var(--market-glow-a), transparent 30%),
-      radial-gradient(circle at 78% 18%, var(--market-glow-b), transparent 28%),
-      radial-gradient(circle at 50% 100%, rgba(255, 255, 255, 0.035), transparent 36%);
+      radial-gradient(circle at 20% 10%, var(--market-glow-a), transparent 34%),
+      radial-gradient(circle at 78% 18%, var(--market-glow-b), transparent 32%),
+      radial-gradient(circle at 50% 100%, rgba(255, 255, 255, 0.045), transparent 36%);
     mix-blend-mode: screen;
+  }
+
+  .market-motif {
+    filter: drop-shadow(0 0 28px var(--market-glow-a));
+  }
+
+  :root[data-market="china"] .market-motif {
+    opacity: 0.18;
+    transform: translateY(3%) scale(1.08);
+  }
+
+  :root[data-market="usa"] .market-motif {
+    opacity: 0.16;
+    transform: translateY(4%) scale(1.02);
+  }
+
+  :root[data-market="europe"] .market-motif {
+    opacity: 0.17;
+    transform: translateY(2%) scale(1.04);
+  }
+
+  :root[data-market="china"] .neon-grid {
+    background-size: 96px 96px;
+    mask-image: radial-gradient(circle at 48% 38%, black 0%, transparent 66%);
+  }
+
+  :root[data-market="usa"] .neon-grid {
+    background-size: 54px 54px;
+    mask-image: radial-gradient(circle at 52% 44%, black 0%, transparent 78%);
+  }
+
+  :root[data-market="europe"] .neon-grid {
+    background-size: 84px 84px;
+    mask-image: radial-gradient(circle at 50% 40%, black 0%, transparent 70%);
   }
 
   .glass-panel {

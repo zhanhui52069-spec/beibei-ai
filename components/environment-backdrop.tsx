@@ -8,12 +8,11 @@ export function EnvironmentBackdrop() {
   return (
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
       <svg
-        className="absolute right-[-8%] top-20 h-[64vh] w-[70vw] max-w-5xl text-[color:var(--market-line)] opacity-[0.05] transition-all duration-700"
+        className="market-motif absolute right-[-10%] top-10 h-[78vh] w-[78vw] max-w-6xl text-[color:var(--market-line)] opacity-[0.13] transition-all duration-700"
         viewBox="0 0 900 640"
         fill="none"
       >
         {market === "china" && <ChinaMotif />}
-        {market === "japan" && <JapanMotif />}
         {market === "usa" && <UsaMotif />}
         {market === "europe" && <EuropeMotif />}
       </svg>
@@ -33,20 +32,6 @@ function ChinaMotif() {
       <path d="M714 172c33 63 15 122-54 176" />
       <path d="M536 154c22 48 20 94-6 138" />
       <path d="M506 194c40-10 72-2 96 24" />
-    </g>
-  );
-}
-
-function JapanMotif() {
-  return (
-    <g stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M72 448h760" />
-      <path d="M150 448 362 188l84 118 72-90 208 232" />
-      <path d="M332 225c36 20 72 20 108 0" />
-      <path d="M612 202c38 16 78 16 120 0" />
-      <path d="M636 178c-17-28-2-58 30-58 31 0 48 30 30 58" />
-      <path d="M690 178c-17-28-2-58 30-58 31 0 48 30 30 58" />
-      <path d="M604 334c28-16 55-16 82 0 28 16 55 16 82 0" />
     </g>
   );
 }
