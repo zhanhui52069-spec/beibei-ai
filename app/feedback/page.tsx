@@ -19,38 +19,11 @@ export default function FeedbackPage() {
   const [role, setRole] = useState(t.feedback.roles[0]);
   const [category, setCategory] = useState(t.feedback.categories[0]);
   const [message, setMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [notice, setNotice] = useState("");
 
   useEffect(() => {
     setRole(t.feedback.roles[0]);
     setCategory(t.feedback.categories[0]);
   }, [locale, t.feedback.categories, t.feedback.roles]);
-
-  const submitFeedback = async () => {
-    if (!message.trim() || isSubmitting) return;
-
-    setIsSubmitting(true);
-    setNotice("");
-
-    try {
-      const response = await fetch("/api/feedback", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, role, category, message, locale }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Feedback request failed");
-      }
-
-      setNotice(locale === "zh" ? "已收到你的反馈，谢谢。" : "Feedback received. Thank you.");
-    } catch {
-      setNotice(locale === "zh" ? "提交失败，请稍后再试。" : "Could not send feedback. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-background">
@@ -91,12 +64,14 @@ export default function FeedbackPage() {
             </p>
           </div>
 
-          <div className="glass-panel soft-reveal rounded-lg border p-5 sm:p-6">
+          <form action="/api/feedback-form" method="post" className="glass-panel soft-reveal rounded-lg border p-5 sm:p-6">
+            <input type="hidden" name="locale" value={locale} />
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="feedback-name">{t.feedback.name}</Label>
                 <Input
                   id="feedback-name"
+                  name="name"
                   value={name}
                   onChange={(event) => setName(event.target.value)}
                   placeholder={t.feedback.namePlaceholder}
@@ -107,6 +82,7 @@ export default function FeedbackPage() {
                 <Label htmlFor="feedback-email">{t.feedback.email}</Label>
                 <Input
                   id="feedback-email"
+                  name="email"
                   type="email"
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
@@ -118,6 +94,7 @@ export default function FeedbackPage() {
                 <Label htmlFor="feedback-role">{t.feedback.role}</Label>
                 <select
                   id="feedback-role"
+                  name="role"
                   value={role}
                   onChange={(event) => setRole(event.target.value)}
                   className="h-10 w-full rounded-md border border-white/10 bg-background/70 px-3 text-sm text-foreground"
@@ -133,6 +110,7 @@ export default function FeedbackPage() {
                 <Label htmlFor="feedback-category">{t.feedback.category}</Label>
                 <select
                   id="feedback-category"
+                  name="category"
                   value={category}
                   onChange={(event) => setCategory(event.target.value)}
                   className="h-10 w-full rounded-md border border-white/10 bg-background/70 px-3 text-sm text-foreground"
@@ -150,6 +128,7 @@ export default function FeedbackPage() {
               <Label htmlFor="feedback-message">{t.feedback.message}</Label>
               <Textarea
                 id="feedback-message"
+                name="message"
                 value={message}
                 onChange={(event) => setMessage(event.target.value)}
                 placeholder={t.feedback.messagePlaceholder}
@@ -158,22 +137,14 @@ export default function FeedbackPage() {
               />
             </div>
 
-            {notice ? (
-              <p className="mt-4 rounded-lg border border-white/10 bg-white/[0.045] p-3 text-sm text-muted-foreground">
-                {notice}
-              </p>
-            ) : null}
-
             <Button
-              type="button"
-              onClick={() => void submitFeedback()}
-              disabled={isSubmitting || !message.trim()}
+              type="submit"
               className="mt-5 w-full bg-foreground text-background hover:bg-foreground/90"
             >
               <Send className="mr-2 h-4 w-4" />
-              {isSubmitting ? t.feedback.submitting : t.feedback.submit}
+              {t.feedback.submit}
             </Button>
-          </div>
+          </form>
         </div>
       </section>
     </main>
