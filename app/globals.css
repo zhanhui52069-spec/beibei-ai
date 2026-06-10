@@ -48,16 +48,16 @@
 }
 
 :root[data-market="china"] {
-  --accent: oklch(0.72 0.09 185);
-  --ring: oklch(0.75 0.08 175);
-  --market-primary: #9bc9bd;
-  --market-primary-soft: rgba(155, 201, 189, 0.34);
-  --market-secondary: #d8e6df;
-  --market-line: rgba(184, 217, 207, 1);
-  --market-glow-a: rgba(94, 140, 132, 0.22);
-  --market-glow-b: rgba(216, 230, 223, 0.1);
-  --market-grid-a: oklch(0.72 0.08 185 / 0.065);
-  --market-grid-b: oklch(0.86 0.04 170 / 0.055);
+  --accent: oklch(0.79 0.11 165);
+  --ring: oklch(0.82 0.09 190);
+  --market-primary: #a8dec4;
+  --market-primary-soft: rgba(168, 222, 196, 0.38);
+  --market-secondary: #dceff2;
+  --market-line: rgba(207, 235, 225, 1);
+  --market-glow-a: rgba(132, 208, 181, 0.24);
+  --market-glow-b: rgba(190, 227, 238, 0.17);
+  --market-grid-a: oklch(0.83 0.08 165 / 0.07);
+  --market-grid-b: oklch(0.89 0.05 205 / 0.06);
 }
 
 :root[data-market="usa"] {
@@ -175,6 +175,13 @@
     min-height: 100vh;
     transition: background-image 700ms ease;
   }
+
+  :root[data-market="china"] body {
+    background-image:
+      radial-gradient(circle at 16% 8%, rgba(132, 208, 181, 0.2), transparent 30%),
+      radial-gradient(circle at 84% 12%, rgba(190, 227, 238, 0.14), transparent 28%),
+      linear-gradient(to bottom, oklch(0.15 0.025 195), oklch(0.085 0.014 205));
+  }
 }
 
 @layer utilities {
@@ -199,12 +206,12 @@
 
   :root[data-market="china"] .market-hero-backdrop {
     background:
-      linear-gradient(90deg, rgba(5, 10, 14, 0.9) 0%, rgba(9, 25, 27, 0.66) 40%, rgba(5, 10, 14, 0.08) 78%),
-      radial-gradient(circle at 24% 16%, rgba(105, 160, 150, 0.24), transparent 38%),
-      linear-gradient(115deg, transparent 0%, rgba(210, 230, 224, 0.045) 48%, transparent 58%),
-      url('/images/markets/china-jiangnan-hero.png') center / cover no-repeat;
+      linear-gradient(90deg, rgba(12, 29, 38, 0.78) 0%, rgba(24, 57, 59, 0.42) 40%, rgba(18, 42, 44, 0.03) 76%),
+      radial-gradient(circle at 25% 12%, rgba(188, 232, 215, 0.2), transparent 42%),
+      linear-gradient(115deg, transparent 0%, rgba(242, 250, 245, 0.1) 48%, transparent 58%),
+      url('/images/markets/china-spring-hero.png') center / cover no-repeat;
     background-size: auto, auto, 230% 100%, cover;
-    filter: saturate(0.96) contrast(1.04);
+    filter: saturate(1.05) brightness(1.1) contrast(0.96);
   }
 
   :root[data-market="usa"] .market-hero-backdrop {

@@ -27,10 +27,10 @@ const palettes: Record<
   }
 > = {
   china: {
-    halo: ["rgba(132, 184, 174, 0.12)", "rgba(216, 230, 223, 0.045)"],
-    dot: "rgba(200, 228, 219, ALPHA)",
-    shadow: "rgba(112, 166, 156, 0.68)",
-    line: "rgba(178, 220, 210, ALPHA)",
+    halo: ["rgba(180, 232, 211, 0.15)", "rgba(215, 240, 244, 0.065)"],
+    dot: "rgba(224, 245, 235, ALPHA)",
+    shadow: "rgba(142, 210, 185, 0.42)",
+    line: "rgba(202, 235, 224, ALPHA)",
   },
   usa: {
     halo: ["rgba(96, 165, 250, 0.13)", "rgba(56, 189, 248, 0.055)"],
@@ -95,10 +95,10 @@ export function MouseParticles() {
       for (let index = 0; index < count; index += 1) {
         const angle = Math.random() * Math.PI * 2;
         const speed =
-          market === "usa" ? 0.95 + Math.random() * 1.75 : market === "china" ? 0.14 + Math.random() * 0.46 : 0.22 + Math.random() * 1.05;
+          market === "usa" ? 0.95 + Math.random() * 1.75 : market === "china" ? 0.02 + Math.random() * 0.08 : 0.22 + Math.random() * 1.05;
         const kind =
           market === "china"
-            ? Math.random() > 0.14
+            ? Math.random() > 0.22
               ? "ripple"
               : "dot"
             : market === "usa"
@@ -109,20 +109,21 @@ export function MouseParticles() {
 
         particles.push({
           x: x + (Math.random() - 0.5) * 12,
-          y: y + (Math.random() - 0.5) * 12,
+          y: y + (Math.random() - 0.5) * (market === "china" ? 7 : 12),
           vx: market === "usa" ? speed : Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed + (market === "china" ? 0.02 : -0.12),
+          vy: Math.sin(angle) * speed + (market === "china" ? 0 : -0.12),
           life: 0,
-          maxLife: market === "usa" ? 42 + Math.random() * 28 : market === "china" ? 78 + Math.random() * 52 : 64 + Math.random() * 42,
-          size: kind === "ripple" ? 2.2 + Math.random() * 3.1 : 0.9 + Math.random() * (kind === "trail" ? 1.4 : 2.1),
+          maxLife: market === "usa" ? 42 + Math.random() * 28 : market === "china" ? 88 + Math.random() * 46 : 64 + Math.random() * 42,
+          size: kind === "ripple" ? 3.6 + Math.random() * 2.8 : 0.9 + Math.random() * (kind === "trail" ? 1.4 : 2.1),
           kind,
-          rotation: Math.random() * Math.PI * 2,
-          spin: (Math.random() - 0.5) * 0.045,
+          rotation: market === "china" ? 0 : Math.random() * Math.PI * 2,
+          spin: market === "china" ? 0 : (Math.random() - 0.5) * 0.045,
         });
       }
 
-      if (particles.length > 96) {
-        particles.splice(0, particles.length - 96);
+      const particleLimit = market === "china" ? 52 : 96;
+      if (particles.length > particleLimit) {
+        particles.splice(0, particles.length - particleLimit);
       }
     };
 
@@ -131,8 +132,9 @@ export function MouseParticles() {
       mouseY = event.clientY;
 
       const now = performance.now();
-      if (now - lastSpawn > 28) {
-        spawn(mouseX, mouseY, 2);
+      const spawnDelay = market === "china" ? 62 : 28;
+      if (now - lastSpawn > spawnDelay) {
+        spawn(mouseX, mouseY, market === "china" ? 1 : 2);
         lastSpawn = now;
       }
     };
@@ -192,18 +194,23 @@ export function MouseParticles() {
           context.arc(0, 0, particle.size * 0.85, 0, Math.PI * 2);
           context.fill();
         } else if (particle.kind === "ripple") {
-          const radius = particle.size * (1.2 + progress * 5.6);
-          context.shadowBlur = 7;
+          const radiusX = particle.size * (1.4 + progress * 7.4);
+          const radiusY = radiusX * (0.22 + particle.size * 0.008);
+          const rippleAlpha = Math.sin(Math.min(progress, 1) * Math.PI) * alpha;
+          context.shadowBlur = 3;
           context.beginPath();
-          context.arc(0, 0, radius, 0, Math.PI * 2);
-          context.lineWidth = 1;
-          context.strokeStyle = palette.line.replace("ALPHA", String(alpha * 0.42));
+          context.ellipse(0, 0, radiusX, radiusY, 0, 0, Math.PI * 2);
+          context.lineWidth = 0.85;
+          context.strokeStyle = palette.line.replace("ALPHA", String(rippleAlpha * 0.34));
           context.stroke();
-          context.beginPath();
-          context.arc(0, 0, radius * 0.46, 0, Math.PI * 2);
-          context.lineWidth = 0.8;
-          context.strokeStyle = palette.line.replace("ALPHA", String(alpha * 0.18));
-          context.stroke();
+
+          if (progress > 0.2) {
+            context.beginPath();
+            context.ellipse(0, 0, radiusX * 0.58, radiusY * 0.62, 0, 0, Math.PI * 2);
+            context.lineWidth = 0.65;
+            context.strokeStyle = palette.line.replace("ALPHA", String(rippleAlpha * 0.16));
+            context.stroke();
+          }
         } else {
           context.beginPath();
           context.arc(0, 0, particle.size, 0, Math.PI * 2);
@@ -217,7 +224,7 @@ export function MouseParticles() {
           const next = particles[nextIndex];
           const distance = Math.hypot(particle.x - next.x, particle.y - next.y);
 
-          if (distance < 82) {
+          if (market !== "china" && distance < 82) {
             context.beginPath();
             context.strokeStyle = palette.line.replace("ALPHA", String(alpha * (1 - distance / 82) * 0.14));
             context.lineWidth = 1;
