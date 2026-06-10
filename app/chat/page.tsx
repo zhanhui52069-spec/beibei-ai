@@ -8,6 +8,7 @@ import { BrandMark } from '@/components/brand-mark'
 import { LanguageToggle } from '@/components/language-toggle'
 import { MarketSwitcher } from '@/components/market-switcher'
 import { useLanguage } from '@/components/language-provider'
+import { useMarket } from '@/components/market-provider'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -29,7 +30,8 @@ function createMessage(role: ChatMessage['role'], content: string): ChatMessage 
 }
 
 export default function ChatPage() {
-  const { t } = useLanguage()
+  const { t, locale } = useLanguage()
+  const { market } = useMarket()
   const [input, setInput] = useState('')
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -69,6 +71,8 @@ export default function ChatPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          locale,
+          market,
           messages: nextMessages.map((message) => ({
             role: message.role,
             content: message.content,

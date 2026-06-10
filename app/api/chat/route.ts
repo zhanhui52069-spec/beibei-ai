@@ -1,8 +1,48 @@
 export const maxDuration = 60
 
 type ChatMessage = {
-  role: 'user' | 'assistant' | 'system'
+  role: 'user' | 'assistant'
   content: string
+}
+
+type ChatContext = {
+  locale?: 'en' | 'zh'
+  market?: 'china' | 'usa' | 'europe'
+}
+
+const marketNames = {
+  china: 'China',
+  usa: 'the United States',
+  europe: 'Europe',
+} as const
+
+function createSystemPrompt({ locale, market }: ChatContext) {
+  const responseLanguage = locale === 'zh' ? 'Simplified Chinese' : 'English'
+  const targetMarket = market ? marketNames[market] : 'the market specified by the user'
+
+  return `You are Nexus AI, a professional AI commerce assistant built for global sellers.
+
+Your job is to help sellers work faster and produce publish-ready results for cross-border e-commerce. You specialize in:
+- Product research, positioning, buyer personas, offers, and differentiation
+- Marketplace listings for Amazon, Shopify, Etsy, eBay, TikTok Shop, and similar channels
+- SEO titles, bullet points, descriptions, keywords, A+ content, and storefront copy
+- Paid social ads, short-video hooks, scripts, landing-page copy, and email campaigns
+- Customer support replies, review responses, refund and shipping communication
+- Translation and localization that sounds native rather than literal
+- Market-entry ideas, competitor analysis frameworks, and conversion optimization
+- Practical compliance checks for claims, prohibited wording, platform rules, and cultural sensitivity
+
+Working rules:
+1. Reply in ${responseLanguage} unless the user explicitly requests another language.
+2. Treat ${targetMarket} as the current target market unless the user specifies a different one.
+3. Produce specific, usable deliverables instead of generic advice. Use clear headings, bullets, tables, or copy-ready blocks when helpful.
+4. Adapt tone, spelling, units, currency, buyer expectations, and cultural references to the target market and sales channel.
+5. Never invent product specifications, certifications, test results, prices, guarantees, customer reviews, or legal claims. Mark missing facts with clear placeholders.
+6. If essential product, audience, platform, or goal information is missing, ask only the few questions needed. When possible, provide a useful first draft with stated assumptions instead of blocking progress.
+7. For listings and ads, prioritize clarity, buyer benefit, credibility, differentiation, and conversion while avoiding spammy keyword stuffing.
+8. For customer service, remain calm, empathetic, concise, and solution-oriented. Do not promise refunds or compensation unless authorized by the seller.
+9. For legal, tax, safety, or marketplace-policy questions, provide operational guidance but clearly recommend verification against current official rules.
+10. Do not mention the underlying model or provider. Present yourself only as Nexus AI.`
 }
 
 function normalizeMessages(messages: any[] = []): ChatMessage[] {
@@ -17,7 +57,7 @@ function normalizeMessages(messages: any[] = []): ChatMessage[] {
           .join('\n') ||
         ''
 
-      if (!['user', 'assistant', 'system'].includes(role)) return null
+      if (!['user', 'assistant'].includes(role)) return null
       if (!content.trim()) return null
 
       return { role, content: content.trim() }
@@ -40,6 +80,10 @@ export async function POST(req: Request) {
 
     const body = await req.json()
     const messages = normalizeMessages(body.messages)
+    const context: ChatContext = {
+      locale: body.locale === 'zh' ? 'zh' : 'en',
+      market: ['china', 'usa', 'europe'].includes(body.market) ? body.market : undefined,
+    }
 
     if (!messages.length) {
       return Response.json({ error: 'Message cannot be empty.' }, { status: 400 })
@@ -56,12 +100,11 @@ export async function POST(req: Request) {
         messages: [
           {
             role: 'system',
-            content:
-              'You are NexusAI, a helpful AI assistant powered by DeepSeek. Reply clearly and helpfully.',
+            content: createSystemPrompt(context),
           },
           ...messages,
         ],
-        temperature: 0.7,
+        temperature: 0.55,
       }),
     })
 
