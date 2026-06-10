@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 type BrandMarkProps = {
   size?: "sm" | "md";
 };
@@ -9,18 +11,16 @@ export function BrandMark({ size = "md" }: BrandMarkProps) {
   return (
     <span className="inline-flex items-center gap-2.5">
       <span
-        className={`${markSize} relative grid place-items-center text-[color:var(--market-primary)]`}
+        className={`${markSize} relative grid place-items-center`}
       >
-        <svg
-          viewBox="0 0 180 180"
-          aria-hidden="true"
-          className="h-full w-full drop-shadow-[0_8px_20px_var(--market-primary-soft)]"
-        >
-          <path
-            d="M58 73C49 62 45 48 47 33C49 17 58 10 68 15C81 22 87 42 88 59C91 42 99 23 112 16C122 10 132 17 134 31C136 47 132 62 122 73C139 84 148 102 147 121C146 145 127 159 102 160H78C53 160 34 145 33 121C32 102 41 84 58 73Z"
-            fill="currentColor"
-          />
-        </svg>
+        <Image
+          src="/brand-rabbit-black.png"
+          alt=""
+          width={256}
+          height={256}
+          className="h-full w-full object-contain drop-shadow-[0_0_1px_rgba(255,255,255,0.9)]"
+          priority
+        />
       </span>
       <span className={`${textSize} font-medium tracking-[0.16em] text-foreground`}>NEXUS AI</span>
     </span>
