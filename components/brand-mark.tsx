@@ -17,13 +17,12 @@ export function BrandMark({ size = "md" }: BrandMarkProps) {
           className="h-full w-full drop-shadow-[0_8px_20px_var(--market-primary-soft)]"
         >
           <path
-            d="M47 75C38 49 42 24 57 18C71 13 84 33 88 60C94 31 109 11 124 18C140 25 141 54 126 80C139 91 146 107 142 123C137 146 116 160 89 160C61 160 40 145 36 121C33 102 37 87 47 75Z"
+            d="M58 73C49 62 45 48 47 33C49 17 58 10 68 15C81 22 87 42 88 59C91 42 99 23 112 16C122 10 132 17 134 31C136 47 132 62 122 73C139 84 148 102 147 121C146 145 127 159 102 160H78C53 160 34 145 33 121C32 102 41 84 58 73Z"
             fill="currentColor"
           />
-          <circle cx="112" cy="101" r="5.5" fill="var(--background)" />
         </svg>
       </span>
-      <span className={`${textSize} font-semibold tracking-normal text-foreground`}>NexusAI</span>
+      <span className={`${textSize} font-medium tracking-[0.16em] text-foreground`}>NEXUS AI</span>
     </span>
   );
 }
