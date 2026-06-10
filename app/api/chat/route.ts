@@ -48,6 +48,65 @@ Working rules:
 12. Do not mention the underlying model or provider. Present yourself only as Nexus AI.`
 }
 
+function needsClaimReview(messages: ChatMessage[]) {
+  const latestUserMessage = [...messages].reverse().find((message) => message.role === 'user')
+  if (!latestUserMessage) return false
+
+  return /listing|product description|bullet points?|amazon|shopify|etsy|ebay|tiktok shop|ad copy|landing page|商品文案|商品描述|产品描述|卖点|广告文案|详情页/i.test(
+    latestUserMessage.content
+  )
+}
+
+async function reviewProductClaims({
+  apiKey,
+  baseURL,
+  modelName,
+  messages,
+  draft,
+  locale,
+}: {
+  apiKey: string
+  baseURL: string
+  modelName: string
+  messages: ChatMessage[]
+  draft: string
+  locale?: 'en' | 'zh'
+}) {
+  const suppliedFacts = messages
+    .filter((message) => message.role === 'user')
+    .map((message) => message.content)
+    .join('\n\n')
+
+  const response = await fetch(`${baseURL.replace(/\/$/, '')}/chat/completions`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: modelName,
+      messages: [
+        {
+          role: 'system',
+          content: `You are the final factual-claims editor for ecommerce copy. Return only the revised copy in ${locale === 'zh' ? 'Simplified Chinese' : 'English'}.
+
+Use only product facts explicitly present in SUPPLIED USER INFORMATION. Remove or replace with bracketed placeholders every unsupported specification or claim, including inferred industry-standard features. Product category names are not proof of features. Do not add advice, an audit report, or explanations. Preserve useful structure and persuasive language that does not assert unsupported facts.`,
+        },
+        {
+          role: 'user',
+          content: `SUPPLIED USER INFORMATION:\n${suppliedFacts}\n\nDRAFT TO REVISE:\n${draft}`,
+        },
+      ],
+      temperature: 0.1,
+    }),
+  })
+
+  if (!response.ok) return draft
+
+  const data = await response.json().catch(() => null)
+  return data?.choices?.[0]?.message?.content?.trim() || draft
+}
+
 function normalizeMessages(messages: any[] = []): ChatMessage[] {
   return messages
     .map((message) => {
@@ -125,13 +184,24 @@ export async function POST(req: Request) {
       )
     }
 
-    const text = data?.choices?.[0]?.message?.content
+    let text = data?.choices?.[0]?.message?.content
 
     if (!text) {
       return Response.json(
         { error: 'DeepSeek returned no visible message.' },
         { status: 502 }
       )
+    }
+
+    if (needsClaimReview(messages)) {
+      text = await reviewProductClaims({
+        apiKey,
+        baseURL,
+        modelName,
+        messages,
+        draft: text,
+        locale: context.locale,
+      })
     }
 
     return Response.json(
