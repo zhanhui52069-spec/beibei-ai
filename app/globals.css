@@ -48,16 +48,16 @@
 }
 
 :root[data-market="china"] {
-  --accent: oklch(0.79 0.11 165);
-  --ring: oklch(0.82 0.09 190);
-  --market-primary: #a8dec4;
-  --market-primary-soft: rgba(168, 222, 196, 0.38);
-  --market-secondary: #dceff2;
-  --market-line: rgba(207, 235, 225, 1);
-  --market-glow-a: rgba(132, 208, 181, 0.24);
-  --market-glow-b: rgba(190, 227, 238, 0.17);
-  --market-grid-a: oklch(0.83 0.08 165 / 0.07);
-  --market-grid-b: oklch(0.89 0.05 205 / 0.06);
+  --accent: oklch(0.71 0.19 31);
+  --ring: oklch(0.79 0.13 79);
+  --market-primary: #d6a84f;
+  --market-primary-soft: rgba(214, 168, 79, 0.4);
+  --market-secondary: #b82d24;
+  --market-line: rgba(226, 183, 94, 1);
+  --market-glow-a: rgba(184, 45, 36, 0.22);
+  --market-glow-b: rgba(214, 168, 79, 0.16);
+  --market-grid-a: oklch(0.67 0.17 31 / 0.07);
+  --market-grid-b: oklch(0.79 0.13 79 / 0.065);
 }
 
 :root[data-market="usa"] {
@@ -178,9 +178,9 @@
 
   :root[data-market="china"] body {
     background-image:
-      radial-gradient(circle at 16% 8%, rgba(132, 208, 181, 0.2), transparent 30%),
-      radial-gradient(circle at 84% 12%, rgba(190, 227, 238, 0.14), transparent 28%),
-      linear-gradient(to bottom, oklch(0.15 0.025 195), oklch(0.085 0.014 205));
+      radial-gradient(circle at 16% 8%, rgba(184, 45, 36, 0.2), transparent 30%),
+      radial-gradient(circle at 84% 12%, rgba(214, 168, 79, 0.13), transparent 28%),
+      linear-gradient(to bottom, oklch(0.13 0.04 28), oklch(0.065 0.018 25));
   }
 }
 
@@ -206,12 +206,40 @@
 
   :root[data-market="china"] .market-hero-backdrop {
     background:
-      linear-gradient(90deg, rgba(12, 29, 38, 0.78) 0%, rgba(24, 57, 59, 0.42) 40%, rgba(18, 42, 44, 0.03) 76%),
-      radial-gradient(circle at 25% 12%, rgba(188, 232, 215, 0.2), transparent 42%),
-      linear-gradient(115deg, transparent 0%, rgba(242, 250, 245, 0.1) 48%, transparent 58%),
-      url('/images/markets/china-spring-hero.png') center / cover no-repeat;
+      linear-gradient(90deg, rgba(10, 4, 4, 0.88) 0%, rgba(37, 8, 7, 0.58) 39%, rgba(41, 9, 6, 0.03) 76%),
+      radial-gradient(circle at 24% 13%, rgba(184, 45, 36, 0.2), transparent 40%),
+      linear-gradient(115deg, transparent 0%, rgba(225, 181, 88, 0.08) 48%, transparent 58%),
+      url('/images/markets/china-cinnabar-hero.png') center / cover no-repeat;
     background-size: auto, auto, 230% 100%, cover;
-    filter: saturate(1.05) brightness(1.1) contrast(0.96);
+    filter: saturate(1.08) brightness(1.02) contrast(1.04);
+    animation: china-landscape-pan 24s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .china-hero-mist,
+  .china-hero-gold {
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  :root[data-market="china"] .china-hero-mist {
+    background:
+      radial-gradient(ellipse at 70% 68%, rgba(255, 224, 166, 0.11), transparent 34%),
+      radial-gradient(ellipse at 54% 52%, rgba(255, 241, 214, 0.07), transparent 28%);
+    filter: blur(18px);
+    mix-blend-mode: screen;
+    opacity: 1;
+    animation: china-mist-drift 16s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+
+  :root[data-market="china"] .china-hero-gold {
+    inset: -8% -65%;
+    background: linear-gradient(108deg, transparent 35%, rgba(255, 214, 126, 0.12) 48%, transparent 60%);
+    mix-blend-mode: screen;
+    opacity: 0.72;
+    animation: china-gold-sweep 9s ease-in-out infinite;
+    will-change: transform, opacity;
   }
 
   :root[data-market="usa"] .market-hero-backdrop {
@@ -423,6 +451,44 @@
   }
 }
 
+@keyframes china-landscape-pan {
+  0%,
+  100% {
+    transform: scale3d(1.025, 1.025, 1) translate3d(0, 0, 0);
+  }
+  50% {
+    transform: scale3d(1.055, 1.055, 1) translate3d(-0.8%, -0.35%, 0);
+  }
+}
+
+@keyframes china-mist-drift {
+  0%,
+  100% {
+    opacity: 0.58;
+    transform: translate3d(-1.5%, 0, 0) scale(1);
+  }
+  50% {
+    opacity: 0.92;
+    transform: translate3d(2%, -1%, 0) scale(1.05);
+  }
+}
+
+@keyframes china-gold-sweep {
+  0%,
+  18% {
+    opacity: 0.25;
+    transform: translate3d(32%, 0, 0);
+  }
+  55% {
+    opacity: 0.75;
+  }
+  78%,
+  100% {
+    opacity: 0.18;
+    transform: translate3d(-32%, 0, 0);
+  }
+}
+
 @keyframes soft-reveal {
   from {
     opacity: 0;
@@ -439,6 +505,8 @@
   .neon-grid,
   .tech-scan,
   .market-hero-backdrop,
+  .china-hero-mist,
+  .china-hero-gold,
   .soft-reveal {
     animation: none;
   }

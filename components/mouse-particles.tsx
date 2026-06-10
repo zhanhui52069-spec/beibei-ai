@@ -27,10 +27,10 @@ const palettes: Record<
   }
 > = {
   china: {
-    halo: ["rgba(180, 232, 211, 0.15)", "rgba(215, 240, 244, 0.065)"],
-    dot: "rgba(224, 245, 235, ALPHA)",
-    shadow: "rgba(142, 210, 185, 0.42)",
-    line: "rgba(202, 235, 224, ALPHA)",
+    halo: ["rgba(214, 168, 79, 0.12)", "rgba(184, 45, 36, 0.045)"],
+    dot: "rgba(236, 196, 112, ALPHA)",
+    shadow: "rgba(214, 168, 79, 0.58)",
+    line: "rgba(236, 196, 112, ALPHA)",
   },
   usa: {
     halo: ["rgba(96, 165, 250, 0.13)", "rgba(56, 189, 248, 0.055)"],
@@ -98,8 +98,8 @@ export function MouseParticles() {
           market === "usa" ? 0.95 + Math.random() * 1.75 : market === "china" ? 0.02 + Math.random() * 0.08 : 0.22 + Math.random() * 1.05;
         const kind =
           market === "china"
-            ? Math.random() > 0.22
-              ? "ripple"
+            ? Math.random() > 0.18
+              ? "dust"
               : "dot"
             : market === "usa"
                 ? "trail"
@@ -114,7 +114,7 @@ export function MouseParticles() {
           vy: Math.sin(angle) * speed + (market === "china" ? 0 : -0.12),
           life: 0,
           maxLife: market === "usa" ? 42 + Math.random() * 28 : market === "china" ? 88 + Math.random() * 46 : 64 + Math.random() * 42,
-          size: kind === "ripple" ? 3.6 + Math.random() * 2.8 : 0.9 + Math.random() * (kind === "trail" ? 1.4 : 2.1),
+          size: kind === "ripple" ? 3.6 + Math.random() * 2.8 : 0.75 + Math.random() * (kind === "trail" ? 1.4 : 1.45),
           kind,
           rotation: market === "china" ? 0 : Math.random() * Math.PI * 2,
           spin: market === "china" ? 0 : (Math.random() - 0.5) * 0.045,

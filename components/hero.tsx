@@ -12,6 +12,8 @@ export function Hero() {
   return (
     <section className="relative min-h-[92vh] overflow-hidden">
       <div className="market-hero-backdrop absolute inset-0" />
+      <div className="china-hero-mist absolute inset-[-5%]" />
+      <div className="china-hero-gold absolute inset-0" />
       <div className="absolute inset-0 bg-black/20" />
       <div className="tech-scan absolute inset-0 opacity-70" />
       <div className="neon-grid absolute inset-0 opacity-50" />
