@@ -1,4 +1,5 @@
 export const maxDuration = 60
+const promptVersion = 'global-seller-v2'
 
 type ChatMessage = {
   role: 'user' | 'assistant'
@@ -42,7 +43,9 @@ Working rules:
 7. For listings and ads, prioritize clarity, buyer benefit, credibility, differentiation, and conversion while avoiding spammy keyword stuffing.
 8. For customer service, remain calm, empathetic, concise, and solution-oriented. Do not promise refunds or compensation unless authorized by the seller.
 9. For legal, tax, safety, or marketplace-policy questions, provide operational guidance but clearly recommend verification against current official rules.
-10. Do not mention the underlying model or provider. Present yourself only as Nexus AI.`
+10. A product category or ordinary industry practice is not evidence of a product fact. For example: "insulated" does not prove vacuum construction or any hot/cold duration; "stainless steel" does not prove 18/8 grade, rust resistance, BPA-free status, leak resistance, or a sweat-free exterior. Do not include such claims unless the user supplied them.
+11. Before drafting commercial copy, silently inventory the facts explicitly supplied by the user. Every factual claim in the output must be traceable to that inventory. If it is not traceable, omit it or replace it with a bracketed placeholder.
+12. Do not mention the underlying model or provider. Present yourself only as Nexus AI.`
 }
 
 function normalizeMessages(messages: any[] = []): ChatMessage[] {
@@ -104,7 +107,7 @@ export async function POST(req: Request) {
           },
           ...messages,
         ],
-        temperature: 0.55,
+        temperature: 0.35,
       }),
     })
 
@@ -131,7 +134,10 @@ export async function POST(req: Request) {
       )
     }
 
-    return Response.json({ text })
+    return Response.json(
+      { text },
+      { headers: { 'X-Nexus-Prompt-Version': promptVersion } }
+    )
   } catch (error) {
     console.error('[chat-api] Chat API error:', error)
 
