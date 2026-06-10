@@ -1,5 +1,5 @@
 export const maxDuration = 60
-const promptVersion = 'global-seller-v2'
+const promptVersion = 'global-seller-v3'
 
 type ChatMessage = {
   role: 'user' | 'assistant'
