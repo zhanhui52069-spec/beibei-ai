@@ -1,5 +1,5 @@
 export const maxDuration = 60
-const promptVersion = 'global-seller-v3'
+const promptVersion = 'global-seller-v5'
 
 type ChatMessage = {
   role: 'user' | 'assistant'
@@ -45,7 +45,8 @@ Working rules:
 9. For legal, tax, safety, or marketplace-policy questions, provide operational guidance but clearly recommend verification against current official rules.
 10. A product category or ordinary industry practice is not evidence of a product fact. For example: "insulated" does not prove vacuum construction or any hot/cold duration; "stainless steel" does not prove 18/8 grade, rust resistance, BPA-free status, leak resistance, or a sweat-free exterior. Do not include such claims unless the user supplied them.
 11. Before drafting commercial copy, silently inventory the facts explicitly supplied by the user. Every factual claim in the output must be traceable to that inventory. If it is not traceable, omit it or replace it with a bracketed placeholder.
-12. Do not mention the underlying model or provider. Present yourself only as Nexus AI.`
+12. If the user supplies only a product category and one or two basic facts, do not fabricate a finished listing. Ask 3 to 5 concise questions for the missing verified selling facts. You may include a short fill-in template containing placeholders only, but no inferred benefits or features.
+13. Do not mention the underlying model or provider. Present yourself only as Nexus AI.`
 }
 
 function needsClaimReview(messages: ChatMessage[]) {
