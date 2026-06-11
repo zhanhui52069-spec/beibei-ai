@@ -1,5 +1,5 @@
 export const maxDuration = 60
-const promptVersion = 'global-seller-v5'
+const promptVersion = 'global-seller-v6'
 
 type ChatMessage = {
   role: 'user' | 'assistant'
@@ -56,6 +56,40 @@ function needsClaimReview(messages: ChatMessage[]) {
   return /listing|product description|bullet points?|amazon|shopify|etsy|ebay|tiktok shop|ad copy|landing page|商品文案|商品描述|产品描述|卖点|广告文案|详情页/i.test(
     latestUserMessage.content
   )
+}
+
+function createBriefRequest(messages: ChatMessage[], locale?: 'en' | 'zh') {
+  const latestUserMessage = [...messages].reverse().find((message) => message.role === 'user')
+  if (!latestUserMessage || !needsClaimReview(messages)) return null
+
+  const content = latestUserMessage.content
+  const allowsPlaceholders = /placeholder|template|use assumptions|先写|占位符|模板|可以假设/i.test(content)
+  const explicitlyMissing = /unknown|not sure|do not know|missing|未知|不清楚|不知道|没有提供|缺少/i.test(content)
+  const isSparse = content.replace(/\s+/g, ' ').trim().length < 220
+
+  if (allowsPlaceholders || (!explicitlyMissing && !isSparse)) return null
+
+  if (locale === 'zh') {
+    return `为了写出可以直接发布、且不虚构卖点的专业文案，请补充以下信息：
+
+1. 产品的准确规格、尺寸、容量、材质或款式
+2. 已验证的核心功能、性能数据和认证
+3. 与竞品相比最重要的差异化卖点
+4. 目标买家、主要使用场景和销售平台
+5. 品牌语气、关键词以及必须避免的表述
+
+如果暂时没有完整资料，也可以回复“使用占位符先写”，我会生成一份便于填写的文案模板。`
+  }
+
+  return `To create professional, publish-ready copy without inventing product claims, please provide:
+
+1. Exact specifications, dimensions, capacity, materials, or variants
+2. Verified features, performance data, and certifications
+3. The most important differentiators versus competing products
+4. Target buyer, primary use case, and sales platform
+5. Brand tone, required keywords, and wording to avoid
+
+If those details are not available yet, reply "use placeholders" and I will create a structured fill-in template.`
 }
 
 async function reviewProductClaims({
@@ -150,6 +184,14 @@ export async function POST(req: Request) {
 
     if (!messages.length) {
       return Response.json({ error: 'Message cannot be empty.' }, { status: 400 })
+    }
+
+    const briefRequest = createBriefRequest(messages, context.locale)
+    if (briefRequest) {
+      return Response.json(
+        { text: briefRequest },
+        { headers: { 'X-Nexus-Prompt-Version': promptVersion } }
+      )
     }
 
     const response = await fetch(`${baseURL.replace(/\/$/, '')}/chat/completions`, {
