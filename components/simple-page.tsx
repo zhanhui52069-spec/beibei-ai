@@ -17,7 +17,7 @@ type SimplePageProps = {
   eyebrow: string;
   title: string;
   description: string;
-  sections: SimplePageSection[];
+  sections: readonly SimplePageSection[];
   ctaLabel?: string;
   ctaHref?: string;
 };

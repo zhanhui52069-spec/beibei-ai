@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useMemo, useState } from "react"
 import Link from "next/link"
-import { ArrowLeft, Database, Loader2, LockKeyhole, RefreshCw } from "lucide-react"
+import { ArrowLeft, Coins, Database, Loader2, LockKeyhole, RefreshCw } from "lucide-react"
 
 import { BrandMark } from "@/components/brand-mark"
 import { LanguageToggle } from "@/components/language-toggle"
@@ -146,6 +146,12 @@ export default function AdminPage() {
       <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-5">
         <BrandMark size="sm" />
         <div className="flex items-center gap-2">
+          <Button asChild variant="ghost" size="sm" className="text-white/70 hover:text-white">
+            <Link href="/admin/usage">
+              <Coins className="h-4 w-4" />
+              Credits
+            </Link>
+          </Button>
           <MarketSwitcher />
           <LanguageToggle />
           <Button asChild variant="ghost" className="text-white/70 hover:text-white">

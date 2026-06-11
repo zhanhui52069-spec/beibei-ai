@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { AlertCircle, ArrowLeft, Bot, Loader2, Send, Trash2, User } from 'lucide-react'
+import { AlertCircle, ArrowLeft, Bot, Coins, Infinity, Loader2, Send, Trash2, User } from 'lucide-react'
 
 import { BrandMark } from '@/components/brand-mark'
 import { LanguageToggle } from '@/components/language-toggle'
@@ -11,6 +11,13 @@ import { useLanguage } from '@/components/language-provider'
 import { useMarket } from '@/components/market-provider'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
@@ -20,6 +27,23 @@ type ChatMessage = {
   role: 'user' | 'assistant'
   content: string
 }
+
+type UsageBalance = {
+  subjectId: string
+  plan: 'free' | 'seller' | 'team'
+  unlimited: boolean
+  freeRemaining: number
+  creditRemaining: number
+  totalRemaining: number
+  nextResetAt: string
+  metering: boolean
+}
+
+const taskPacks = [
+  { id: 'starter', price: '$7', tasks: 200 },
+  { id: 'growth', price: '$15', tasks: 500 },
+  { id: 'scale', price: '$29', tasks: 1200 },
+]
 
 function createMessage(role: ChatMessage['role'], content: string): ChatMessage {
   return {
@@ -36,8 +60,17 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [balance, setBalance] = useState<UsageBalance | null>(null)
+  const [quotaOpen, setQuotaOpen] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  useEffect(() => {
+    void fetch('/api/usage', { cache: 'no-store' })
+      .then((response) => response.json())
+      .then((data) => setBalance(data.balance || null))
+      .catch(() => setBalance(null))
+  }, [])
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -82,7 +115,10 @@ export default function ChatPage() {
 
       const data = await response.json().catch(() => null)
 
+      if (data?.balance) setBalance(data.balance)
+
       if (!response.ok) {
+        if (data?.code === 'quota_exhausted') setQuotaOpen(true)
         throw new Error(data?.error || `Request failed with status ${response.status}`)
       }
 
@@ -104,6 +140,12 @@ export default function ChatPage() {
       handleSubmit(e)
     }
   }
+
+  const usageLabel = balance?.unlimited
+    ? locale === 'zh' ? '团队版不限次数' : 'Unlimited team access'
+    : locale === 'zh'
+      ? `剩余 ${balance?.totalRemaining ?? '...'} 次`
+      : `${balance?.totalRemaining ?? '...'} tasks left`
 
   return (
     <div className="relative flex h-screen flex-col overflow-hidden bg-background">
@@ -238,6 +280,14 @@ export default function ChatPage() {
               className="max-h-[200px] min-h-[44px] flex-1 resize-none border-0 bg-transparent px-3 py-2 text-foreground placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
               rows={1}
             />
+            <button
+              type="button"
+              onClick={() => setQuotaOpen(true)}
+              className="mb-2 hidden shrink-0 items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-muted-foreground transition hover:border-accent/40 hover:text-foreground sm:flex"
+            >
+              {balance?.unlimited ? <Infinity className="h-3.5 w-3.5" /> : <Coins className="h-3.5 w-3.5" />}
+              {usageLabel}
+            </button>
             <Button
               type="submit"
               size="icon"
@@ -248,10 +298,46 @@ export default function ChatPage() {
             </Button>
           </div>
           <p className="mt-2 text-center text-xs text-muted-foreground">
+            <button type="button" onClick={() => setQuotaOpen(true)} className="mr-2 text-accent sm:hidden">
+              {usageLabel}
+            </button>
             {t.chatPage.disclaimer}
           </p>
         </form>
       </div>
+
+      <Dialog open={quotaOpen} onOpenChange={setQuotaOpen}>
+        <DialogContent className="border-white/10 bg-[#0b0910]/95 text-foreground backdrop-blur-2xl sm:max-w-xl">
+          <DialogHeader>
+            <DialogTitle>{locale === 'zh' ? '添加 AI 任务次数' : 'Add AI task credits'}</DialogTitle>
+            <DialogDescription>
+              {locale === 'zh'
+                ? '免费版每 24 小时提供 5 次。充值次数有效期为 12 个月，请求失败不会扣除。'
+                : 'Free includes 5 tasks every 24 hours. Purchased tasks last 12 months, and failed requests are not charged.'}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-3 sm:grid-cols-3">
+            {taskPacks.map((pack) => (
+              <Link
+                key={pack.id}
+                href={`/checkout?plan=seller&pack=${pack.id}`}
+                className="rounded-lg border border-white/10 bg-white/[0.04] p-4 transition hover:-translate-y-1 hover:border-accent/45 hover:bg-white/[0.08]"
+              >
+                <p className="text-2xl font-semibold">{pack.price}</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {pack.tasks} {locale === 'zh' ? '次任务' : 'AI tasks'}
+                </p>
+              </Link>
+            ))}
+          </div>
+          <div className="flex items-center justify-between rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-sm">
+            <span className="text-muted-foreground">
+              {locale === 'zh' ? '当前设备编号' : 'Current device ID'}
+            </span>
+            <code className="text-xs text-foreground">{balance?.subjectId?.slice(0, 8) || '--------'}</code>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

@@ -17,8 +17,8 @@ export default function FeedbackPage() {
   const { locale, t } = useLanguage();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState(t.feedback.roles[0]);
-  const [category, setCategory] = useState(t.feedback.categories[0]);
+  const [role, setRole] = useState<string>(t.feedback.roles[0]);
+  const [category, setCategory] = useState<string>(t.feedback.categories[0]);
   const [message, setMessage] = useState("");
   const [submitState, setSubmitState] = useState<"idle" | "sending" | "sent">("idle");
 

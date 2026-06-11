@@ -1,3 +1,6 @@
+import { completeAiTask, releaseAiTask, reserveAiTask } from '@/lib/usage-store'
+import { getUsageSubject, usageCookieHeader } from '@/lib/usage-subject'
+
 export const maxDuration = 60
 const promptVersion = 'global-seller-v10'
 
@@ -200,6 +203,15 @@ function normalizeMessages(messages: any[] = []): ChatMessage[] {
 }
 
 export async function POST(req: Request) {
+  const subject = getUsageSubject(req)
+  const requestId = crypto.randomUUID()
+  let reservation: Awaited<ReturnType<typeof reserveAiTask>> | null = null
+
+  const responseHeaders = () => ({
+    'X-Nexus-Prompt-Version': promptVersion,
+    ...(subject.isNew ? { 'Set-Cookie': usageCookieHeader(subject.subjectId) } : {}),
+  })
+
   try {
     const apiKey = process.env.OPENAI_API_KEY
     const baseURL = process.env.OPENAI_BASE_URL || 'https://api.deepseek.com/v1'
@@ -220,14 +232,28 @@ export async function POST(req: Request) {
     }
 
     if (!messages.length) {
-      return Response.json({ error: 'Message cannot be empty.' }, { status: 400 })
+      return Response.json({ error: 'Message cannot be empty.' }, { status: 400, headers: responseHeaders() })
+    }
+
+    reservation = await reserveAiTask(subject.subjectId, requestId)
+
+    if (!reservation.allowed) {
+      return Response.json(
+        {
+          error: 'Your available AI tasks have been used. Add a Seller task pack to continue.',
+          code: 'quota_exhausted',
+          balance: reservation,
+        },
+        { status: 402, headers: responseHeaders() },
+      )
     }
 
     const briefRequest = createBriefRequest(messages, context.locale)
     if (briefRequest) {
+      const balance = await completeAiTask(subject.subjectId, requestId, reservation.metering)
       return Response.json(
-        { text: cleanAssistantText(briefRequest) },
-        { headers: { 'X-Nexus-Prompt-Version': promptVersion } }
+        { text: cleanAssistantText(briefRequest), balance },
+        { headers: responseHeaders() }
       )
     }
 
@@ -253,23 +279,36 @@ export async function POST(req: Request) {
     const data = await response.json().catch(() => null)
 
     if (!response.ok) {
+      const balance = await releaseAiTask(
+        subject.subjectId,
+        requestId,
+        `Provider status ${response.status}`,
+        reservation.metering,
+      )
       return Response.json(
         {
           error:
             data?.error?.message ||
             data?.message ||
             `DeepSeek API request failed with status ${response.status}`,
+          balance,
         },
-        { status: response.status }
+        { status: response.status, headers: responseHeaders() }
       )
     }
 
     let text = data?.choices?.[0]?.message?.content
 
     if (!text) {
+      const balance = await releaseAiTask(
+        subject.subjectId,
+        requestId,
+        'Provider returned no visible message',
+        reservation.metering,
+      )
       return Response.json(
-        { error: 'DeepSeek returned no visible message.' },
-        { status: 502 }
+        { error: 'DeepSeek returned no visible message.', balance },
+        { status: 502, headers: responseHeaders() }
       )
     }
 
@@ -284,12 +323,19 @@ export async function POST(req: Request) {
       })
     }
 
-    return Response.json(
-      { text: cleanAssistantText(text) },
-      { headers: { 'X-Nexus-Prompt-Version': promptVersion } }
-    )
+    const balance = await completeAiTask(subject.subjectId, requestId, reservation.metering)
+    return Response.json({ text: cleanAssistantText(text), balance }, { headers: responseHeaders() })
   } catch (error) {
     console.error('[chat-api] Chat API error:', error)
+
+    const balance = reservation?.allowed
+      ? await releaseAiTask(
+          subject.subjectId,
+          requestId,
+          error instanceof Error ? error.message : 'Unknown chat error',
+          reservation.metering,
+        )
+      : undefined
 
     return Response.json(
       {
@@ -297,8 +343,9 @@ export async function POST(req: Request) {
           error instanceof Error
             ? `Chat service error: ${error.message}`
             : 'Unknown chat service error.',
+        balance,
       },
-      { status: 500 }
+      { status: 500, headers: responseHeaders() }
     )
   }
 }

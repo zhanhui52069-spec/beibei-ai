@@ -114,7 +114,7 @@ export function MouseParticles() {
           vy: Math.sin(angle) * speed + (market === "china" ? 0 : -0.12),
           life: 0,
           maxLife: market === "usa" ? 42 + Math.random() * 28 : market === "china" ? 88 + Math.random() * 46 : 64 + Math.random() * 42,
-          size: kind === "ripple" ? 3.6 + Math.random() * 2.8 : 0.75 + Math.random() * (kind === "trail" ? 1.4 : 1.45),
+          size: market === "china" ? 3.6 + Math.random() * 2.8 : 0.75 + Math.random() * (kind === "trail" ? 1.4 : 1.45),
           kind,
           rotation: market === "china" ? 0 : Math.random() * Math.PI * 2,
           spin: market === "china" ? 0 : (Math.random() - 0.5) * 0.045,

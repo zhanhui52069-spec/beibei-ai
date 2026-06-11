@@ -1,6 +1,6 @@
 import { getFeedbackStoreStatus, listFeedback } from '@/lib/feedback-store'
 
-function verifyAdmin(req: Request) {
+function verifyAdmin(req: Request): { ok: true } | { ok: false; response: Response } {
   const adminPassword = process.env.ADMIN_PASSWORD
 
   if (!adminPassword) {
@@ -20,7 +20,7 @@ function verifyAdmin(req: Request) {
     }
   }
 
-  return { ok: true, response: null }
+  return { ok: true }
 }
 
 export async function GET(req: Request) {
