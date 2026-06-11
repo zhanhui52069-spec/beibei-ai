@@ -1,5 +1,5 @@
 export const maxDuration = 60
-const promptVersion = 'global-seller-v8'
+const promptVersion = 'global-seller-v9'
 
 type ChatMessage = {
   role: 'user' | 'assistant'
@@ -165,7 +165,7 @@ Use only product facts explicitly present in SUPPLIED USER INFORMATION. Remove o
         },
         {
           role: 'user',
-          content: `SUPPLIED USER INFORMATION (the only trusted source):\n${suppliedFacts}\n\nUNTRUSTED DRAFT TO REVISE:\n${draft}\n\nMANDATORY REMOVAL CHECK:\nUnless the exact fact appears in the trusted source above, remove claims about double-wall construction, vacuum insulation, temperature duration, leak-proofing, BPA-free status, sweat or condensation resistance, material grade such as 18/8, rust resistance, dishwasher safety, wide mouths, included lids or accessories, cup-holder fit, dimensions, capacity, compatibility, certifications, warranties, shipping speed, health benefits, or test results. Do not soften these claims; delete them or use a clear bracketed placeholder.`,
+          content: `SUPPLIED USER INFORMATION (the only trusted source):\n${suppliedFacts}\n\nUNTRUSTED DRAFT TO REVISE:\n${draft}\n\nMANDATORY REMOVAL CHECK:\nUnless the exact fact appears in the trusted source above, remove claims about double-wall construction, vacuum insulation, temperature duration, leak-proofing, BPA-free status, sweat or condensation resistance, material grade such as 18/8, rust resistance, dishwasher safety, wide mouths, included lids or accessories, cup-holder fit, dimensions, capacity, compatibility, certifications, warranties, shipping speed, health benefits, or test results. Remove invented first-person experiences, testimonials, before-and-after stories, pain relief, medical advice, body-height changes, guaranteed outcomes, and claims that a condition fixes itself. Rewrite them as neutral product-focused or everyday-scenario copy. Do not soften unsupported claims; delete them or use a clear bracketed placeholder.`,
         },
       ],
       temperature: 0.1,
