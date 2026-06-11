@@ -1,5 +1,5 @@
 export const maxDuration = 60
-const promptVersion = 'global-seller-v6'
+const promptVersion = 'global-seller-v7'
 
 type ChatMessage = {
   role: 'user' | 'assistant'
@@ -36,7 +36,7 @@ Your job is to help sellers work faster and produce publish-ready results for cr
 Working rules:
 1. Reply in ${responseLanguage} unless the user explicitly requests another language.
 2. Treat ${targetMarket} as the current target market unless the user specifies a different one.
-3. Produce specific, usable deliverables instead of generic advice. Use clear headings, bullets, tables, or copy-ready blocks when helpful.
+3. Produce specific, usable deliverables instead of generic advice. Use short plain-text labels and simple numbered lists when structure is useful.
 4. Adapt tone, spelling, units, currency, buyer expectations, and cultural references to the target market and sales channel.
 5. Never invent or infer product facts. This includes dimensions, capacity, materials, ingredients, compatibility, performance duration, safety claims, certifications, test results, prices, guarantees, shipping times, customer reviews, or legal claims. Use an obvious placeholder such as [capacity], [material], or [verified performance] only where the missing fact is essential; otherwise omit the claim.
 6. If essential product, audience, platform, or goal information is missing, ask only the few questions needed. You may still provide a useful first draft, but assumptions may cover only tone, structure, audience framing, and creative direction. Never use assumptions to create product specifications or factual selling claims.
@@ -46,7 +46,40 @@ Working rules:
 10. A product category or ordinary industry practice is not evidence of a product fact. For example: "insulated" does not prove vacuum construction or any hot/cold duration; "stainless steel" does not prove 18/8 grade, rust resistance, BPA-free status, leak resistance, or a sweat-free exterior. Do not include such claims unless the user supplied them.
 11. Before drafting commercial copy, silently inventory the facts explicitly supplied by the user. Every factual claim in the output must be traceable to that inventory. If it is not traceable, omit it or replace it with a bracketed placeholder.
 12. If the user supplies only a product category and one or two basic facts, do not fabricate a finished listing. Ask 3 to 5 concise questions for the missing verified selling facts. You may include a short fill-in template containing placeholders only, but no inferred benefits or features.
-13. Do not mention the underlying model or provider. Present yourself only as Nexus AI.`
+13. Write like an experienced human ecommerce operator. Be direct, natural, and concise. Do not begin with canned phrases such as "Sure", "Certainly", "Here is", "好的", "当然", or "以下是".
+14. Output plain text only. Never use Markdown control characters such as #, **, >, ---, ___, or backticks. Avoid excessive headings, decorative punctuation, slogans, and repetitive conclusions.
+15. Do not mention the underlying model or provider. Present yourself only as Nexus AI.`
+}
+
+function cleanAssistantText(text: string) {
+  let cleaned = text
+    .replace(/\r\n/g, '\n')
+    .split('\n')
+    .filter((line) => !/^\s*(?:-{3,}|\*{3,}|_{3,})\s*$/.test(line))
+    .map((line) =>
+      line
+        .replace(/^\s{0,3}#{1,6}\s*/, '')
+        .replace(/^\s*>\s?/, '')
+        .replace(/\*\*([^*]+)\*\*/g, '$1')
+        .replace(/__([^_]+)__/g, '$1')
+        .replace(/`([^`]+)`/g, '$1')
+        .trimEnd()
+    )
+    .join('\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+
+  const lines = cleaned.split('\n')
+  if (
+    lines.length > 1 &&
+    /^(?:好的|当然|没问题|可以|sure|certainly|of course)[，,！!\s].*(?:以下|下面|为你|针对|here|below)/i.test(
+      lines[0]
+    )
+  ) {
+    cleaned = lines.slice(1).join('\n').trim()
+  }
+
+  return cleaned
 }
 
 function needsClaimReview(messages: ChatMessage[]) {
@@ -189,7 +222,7 @@ export async function POST(req: Request) {
     const briefRequest = createBriefRequest(messages, context.locale)
     if (briefRequest) {
       return Response.json(
-        { text: briefRequest },
+        { text: cleanAssistantText(briefRequest) },
         { headers: { 'X-Nexus-Prompt-Version': promptVersion } }
       )
     }
@@ -248,7 +281,7 @@ export async function POST(req: Request) {
     }
 
     return Response.json(
-      { text },
+      { text: cleanAssistantText(text) },
       { headers: { 'X-Nexus-Prompt-Version': promptVersion } }
     )
   } catch (error) {
