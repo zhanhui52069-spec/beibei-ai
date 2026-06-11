@@ -151,3 +151,25 @@ export async function setTeamAccess(subjectId: string, active: boolean, email = 
     }),
   )
 }
+
+export async function fulfillAiPurchase(input: {
+  providerReference: string
+  subjectId: string
+  email: string
+  packId: string
+  tasks: number
+  amountCents: number
+  currency: string
+}) {
+  return withMetering(
+    await callRpc<Omit<UsageBalance, 'metering'>>('fulfill_ai_purchase', {
+      p_provider_reference: input.providerReference,
+      p_subject_id: input.subjectId,
+      p_email: input.email,
+      p_pack_id: input.packId,
+      p_tasks: input.tasks,
+      p_amount_cents: input.amountCents,
+      p_currency: input.currency,
+    }),
+  )
+}

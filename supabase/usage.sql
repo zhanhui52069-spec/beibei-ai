@@ -41,6 +41,17 @@ create table if not exists public.usage_events (
   created_at timestamptz not null default now()
 );
 
+create table if not exists public.payment_fulfillments (
+  provider_reference text primary key,
+  subject_id text not null references public.usage_accounts(subject_id) on delete cascade,
+  email text not null default '',
+  pack_id text not null,
+  tasks integer not null check (tasks > 0),
+  amount_cents integer not null check (amount_cents > 0),
+  currency text not null default 'usd',
+  created_at timestamptz not null default now()
+);
+
 create index if not exists credit_lots_subject_expiry_idx
   on public.credit_lots (subject_id, expires_at) where remaining > 0;
 create index if not exists task_reservations_subject_idx
@@ -52,6 +63,7 @@ alter table public.usage_accounts enable row level security;
 alter table public.credit_lots enable row level security;
 alter table public.task_reservations enable row level security;
 alter table public.usage_events enable row level security;
+alter table public.payment_fulfillments enable row level security;
 
 create or replace function public.get_ai_balance(p_subject_id text)
 returns jsonb
@@ -308,24 +320,95 @@ begin
 end;
 $$;
 
+create or replace function public.fulfill_ai_purchase(
+  p_provider_reference text,
+  p_subject_id text,
+  p_email text,
+  p_pack_id text,
+  p_tasks integer,
+  p_amount_cents integer,
+  p_currency text default 'usd'
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if p_tasks <= 0 or p_amount_cents <= 0 then
+    raise exception 'Invalid purchase amount';
+  end if;
+
+  insert into public.usage_accounts(subject_id, email, plan)
+  values (p_subject_id, coalesce(p_email, ''), 'seller')
+  on conflict (subject_id) do update
+    set email = case when excluded.email <> '' then excluded.email else usage_accounts.email end,
+        plan = case when usage_accounts.plan = 'team' then 'team' else 'seller' end,
+        updated_at = now();
+
+  insert into public.payment_fulfillments(
+    provider_reference,
+    subject_id,
+    email,
+    pack_id,
+    tasks,
+    amount_cents,
+    currency
+  ) values (
+    p_provider_reference,
+    p_subject_id,
+    coalesce(p_email, ''),
+    p_pack_id,
+    p_tasks,
+    p_amount_cents,
+    lower(coalesce(p_currency, 'usd'))
+  ) on conflict (provider_reference) do nothing;
+
+  if found then
+    insert into public.credit_lots(subject_id, original_amount, remaining, source, reference)
+    values (p_subject_id, p_tasks, p_tasks, 'stripe_purchase', p_provider_reference);
+
+    insert into public.usage_events(subject_id, event_type, amount, note, metadata)
+    values (
+      p_subject_id,
+      'purchase',
+      p_tasks,
+      'Stripe payment completed',
+      jsonb_build_object(
+        'providerReference', p_provider_reference,
+        'packId', p_pack_id,
+        'amountCents', p_amount_cents,
+        'currency', lower(coalesce(p_currency, 'usd'))
+      )
+    );
+  end if;
+
+  return public.get_ai_balance(p_subject_id);
+end;
+$$;
+
 revoke all on public.usage_accounts from anon, authenticated;
 revoke all on public.credit_lots from anon, authenticated;
 revoke all on public.task_reservations from anon, authenticated;
 revoke all on public.usage_events from anon, authenticated;
+revoke all on public.payment_fulfillments from anon, authenticated;
 revoke execute on function public.get_ai_balance(text) from public, anon, authenticated;
 revoke execute on function public.reserve_ai_task(text, uuid) from public, anon, authenticated;
 revoke execute on function public.complete_ai_task(text, uuid) from public, anon, authenticated;
 revoke execute on function public.release_ai_task(text, uuid, text) from public, anon, authenticated;
 revoke execute on function public.adjust_ai_credits(text, integer, text, text, text) from public, anon, authenticated;
 revoke execute on function public.set_team_access(text, boolean, text) from public, anon, authenticated;
+revoke execute on function public.fulfill_ai_purchase(text, text, text, text, integer, integer, text) from public, anon, authenticated;
 
 grant select, insert, update, delete on public.usage_accounts to service_role;
 grant select, insert, update, delete on public.credit_lots to service_role;
 grant select, insert, update, delete on public.task_reservations to service_role;
 grant select, insert, update, delete on public.usage_events to service_role;
+grant select, insert, update, delete on public.payment_fulfillments to service_role;
 grant execute on function public.get_ai_balance(text) to service_role;
 grant execute on function public.reserve_ai_task(text, uuid) to service_role;
 grant execute on function public.complete_ai_task(text, uuid) to service_role;
 grant execute on function public.release_ai_task(text, uuid, text) to service_role;
 grant execute on function public.adjust_ai_credits(text, integer, text, text, text) to service_role;
 grant execute on function public.set_team_access(text, boolean, text) to service_role;
+grant execute on function public.fulfill_ai_purchase(text, text, text, text, integer, integer, text) to service_role;

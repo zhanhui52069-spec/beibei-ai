@@ -22,13 +22,22 @@ export default function CheckoutPage() {
   const [selected, setSelected] = useState<(typeof packs)[number]>(packs[1]);
   const [email, setEmail] = useState("");
   const [subjectId, setSubjectId] = useState("");
+  const [paymentEnabled, setPaymentEnabled] = useState<boolean | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "cancelled" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const requestedPack = new URLSearchParams(window.location.search).get("pack");
+    const cancelled = new URLSearchParams(window.location.search).get("cancelled");
     const match = packs.find((pack) => pack.id === requestedPack);
     if (match) setSelected(match);
+    if (cancelled === "1") setStatus("cancelled");
+
+    void fetch("/api/checkout", { cache: "no-store" })
+      .then((response) => response.json())
+      .then((data) => setPaymentEnabled(Boolean(data.enabled)))
+      .catch(() => setPaymentEnabled(false));
 
     void fetch("/api/usage", { cache: "no-store" })
       .then((response) => response.json())
@@ -50,25 +59,23 @@ export default function CheckoutPage() {
     if (!email.trim() || isSubmitting) return;
     setIsSubmitting(true);
     setStatus("idle");
+    setErrorMessage("");
 
     try {
-      const response = await fetch("/api/feedback", {
+      const response = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: "Seller credit request",
           email: email.trim(),
-          role: "Seller",
-          category: "Pricing",
-          locale,
-          message: `Seller task pack request: $${selected.price} for ${selected.tasks} tasks. Subject ID: ${subjectId || "unavailable"}`,
+          packId: selected.id,
         }),
       });
-      if (!response.ok) throw new Error("Request failed");
-      setStatus("success");
-    } catch {
+      const data = await response.json().catch(() => null);
+      if (!response.ok || !data?.url) throw new Error(data?.error || "Could not start secure checkout.");
+      window.location.assign(data.url);
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : "Could not start secure checkout.");
       setStatus("error");
-    } finally {
       setIsSubmitting(false);
     }
   };
@@ -105,7 +112,7 @@ export default function CheckoutPage() {
               <button
                 key={pack.id}
                 type="button"
-                onClick={() => { setSelected(pack); setStatus("idle"); }}
+                onClick={() => { setSelected(pack); setStatus("idle"); setErrorMessage(""); }}
                 className={`rounded-lg border p-4 text-left transition hover:-translate-y-1 ${selected.id === pack.id ? "border-accent bg-accent/12" : "border-white/10 bg-white/[0.035] hover:border-white/25"}`}
               >
                 <span className="block text-2xl font-semibold text-foreground">${pack.price}</span>
@@ -120,7 +127,7 @@ export default function CheckoutPage() {
               id="checkout-email"
               type="email"
               value={email}
-              onChange={(event) => { setEmail(event.target.value); setStatus("idle"); }}
+              onChange={(event) => { setEmail(event.target.value); setStatus("idle"); setErrorMessage(""); }}
               placeholder="you@company.com"
               className="mt-3 border-white/10 bg-background/70"
             />
@@ -143,15 +150,16 @@ export default function CheckoutPage() {
             ))}
           </ul>
 
-          <Button onClick={submitRequest} disabled={!email.trim() || isSubmitting || status === "success"} className="mt-8 w-full bg-foreground text-background hover:bg-foreground/90">
-            {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : status === "success" ? <Check className="mr-2 h-4 w-4" /> : <LockKeyhole className="mr-2 h-4 w-4" />}
-            {status === "success" ? (zh ? "登记成功" : "Request received") : (zh ? "登记购买意向" : "Request purchase access")}
+          <Button onClick={submitRequest} disabled={!email.trim() || isSubmitting || paymentEnabled !== true} className="mt-8 w-full bg-foreground text-background hover:bg-foreground/90">
+            {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <LockKeyhole className="mr-2 h-4 w-4" />}
+            {isSubmitting ? (zh ? "正在打开安全付款" : "Opening secure checkout") : (zh ? `使用 Stripe 支付 $${selected.price}` : `Pay $${selected.price} with Stripe`)}
           </Button>
 
-          {status === "success" && <p className="mt-4 rounded-lg border border-emerald-400/20 bg-emerald-400/10 p-3 text-sm text-emerald-200">{zh ? "我们已记录所选套餐和设备编号，支付开通后会通过邮件通知你。" : "Your pack and device ID were recorded. We will email you when secure payment opens."}</p>}
-          {status === "error" && <p className="mt-4 rounded-lg border border-red-400/20 bg-red-400/10 p-3 text-sm text-red-200">{zh ? "登记失败，请稍后重试。" : "Could not save the request. Please try again."}</p>}
+          {paymentEnabled === false && <p className="mt-4 rounded-lg border border-amber-400/20 bg-amber-400/10 p-3 text-sm text-amber-100">{zh ? "Stripe 商户密钥尚未配置，付款按钮暂时关闭。" : "Stripe merchant keys are not configured yet, so payments are temporarily disabled."}</p>}
+          {status === "cancelled" && <p className="mt-4 rounded-lg border border-white/10 bg-white/[0.04] p-3 text-sm text-muted-foreground">{zh ? "付款已取消，没有产生扣款。" : "Checkout was cancelled. You were not charged."}</p>}
+          {status === "error" && <p className="mt-4 rounded-lg border border-red-400/20 bg-red-400/10 p-3 text-sm text-red-200">{errorMessage || (zh ? "无法打开付款页面，请稍后重试。" : "Could not open checkout. Please try again.")}</p>}
 
-          <p className="mt-4 flex gap-2 text-xs leading-5 text-muted-foreground"><Clock3 className="mt-0.5 h-3.5 w-3.5 shrink-0" />{zh ? "Stripe 安全付款尚未开放。本页面不会收取银行卡信息或产生扣款。" : "Secure Stripe payment is not live yet. This page does not collect card details or charge you."}</p>
+          <p className="mt-4 flex gap-2 text-xs leading-5 text-muted-foreground"><Clock3 className="mt-0.5 h-3.5 w-3.5 shrink-0" />{zh ? "银行卡信息由 Stripe 安全处理。付款确认后，任务次数会自动添加到当前设备。" : "Card details are handled securely by Stripe. Credits are added automatically after payment confirmation."}</p>
         </aside>
       </section>
     </main>
