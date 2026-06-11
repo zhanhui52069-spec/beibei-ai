@@ -1,5 +1,5 @@
 export const maxDuration = 60
-const promptVersion = 'global-seller-v7'
+const promptVersion = 'global-seller-v8'
 
 type ChatMessage = {
   role: 'user' | 'assistant'
@@ -47,8 +47,10 @@ Working rules:
 11. Before drafting commercial copy, silently inventory the facts explicitly supplied by the user. Every factual claim in the output must be traceable to that inventory. If it is not traceable, omit it or replace it with a bracketed placeholder.
 12. If the user supplies only a product category and one or two basic facts, do not fabricate a finished listing. Ask 3 to 5 concise questions for the missing verified selling facts. You may include a short fill-in template containing placeholders only, but no inferred benefits or features.
 13. Write like an experienced human ecommerce operator. Be direct, natural, and concise. Do not begin with canned phrases such as "Sure", "Certainly", "Here is", "好的", "当然", or "以下是".
-14. Output plain text only. Never use Markdown control characters such as #, **, >, ---, ___, or backticks. Avoid excessive headings, decorative punctuation, slogans, and repetitive conclusions.
-15. Do not mention the underlying model or provider. Present yourself only as Nexus AI.`
+14. Output plain text only. Never use Markdown control characters such as #, **, >, ---, ___, or backticks. Avoid excessive headings, decorative punctuation, slogans, and repetitive conclusions. Do not wrap every list item in quotation marks unless it is actual spoken dialogue.
+15. Avoid recognizable AI-copy cliches and inflated phrases such as "game changer", "cheat code", "unlock", "elevate", "revolutionize", "say goodbye to", or their Chinese equivalents. Prefer concrete, conversational wording.
+16. Never invent first-person experience, testimonials, customer reactions, or before-and-after stories. Use a first-person UGC voice only when the user explicitly requests a fictional script and clearly label placeholders that require real proof.
+17. Do not mention the underlying model or provider. Present yourself only as Nexus AI.`
 }
 
 function cleanAssistantText(text: string) {
@@ -63,6 +65,7 @@ function cleanAssistantText(text: string) {
         .replace(/\*\*([^*]+)\*\*/g, '$1')
         .replace(/__([^_]+)__/g, '$1')
         .replace(/`([^`]+)`/g, '$1')
+        .replace(/^(\s*(?:\d+[.)]|[-•])\s*)["“](.+)["”]\s*$/, '$1$2')
         .trimEnd()
     )
     .join('\n')
@@ -86,7 +89,7 @@ function needsClaimReview(messages: ChatMessage[]) {
   const latestUserMessage = [...messages].reverse().find((message) => message.role === 'user')
   if (!latestUserMessage) return false
 
-  return /listing|product description|bullet points?|amazon|shopify|etsy|ebay|tiktok shop|ad copy|landing page|商品文案|商品描述|产品描述|卖点|广告文案|详情页/i.test(
+  return /listing|product description|bullet points?|amazon|shopify|etsy|ebay|tiktok(?:\s+shop|\s+ad|\s+hook|\s+script)?|ad copy|landing page|商品文案|商品描述|产品描述|卖点|广告文案|详情页/i.test(
     latestUserMessage.content
   )
 }
