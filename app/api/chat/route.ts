@@ -1,5 +1,5 @@
 export const maxDuration = 60
-const promptVersion = 'global-seller-v9'
+const promptVersion = 'global-seller-v10'
 
 type ChatMessage = {
   role: 'user' | 'assistant'
@@ -66,6 +66,7 @@ function cleanAssistantText(text: string) {
         .replace(/__([^_]+)__/g, '$1')
         .replace(/`([^`]+)`/g, '$1')
         .replace(/^(\s*(?:\d+[.)]|[-•])\s*)["“](.+)["”]\s*$/, '$1$2')
+        .replace(/^\s*["“](.+)["”]\s*$/, '$1')
         .trimEnd()
     )
     .join('\n')
@@ -161,7 +162,7 @@ async function reviewProductClaims({
           role: 'system',
           content: `You are the final factual-claims editor for ecommerce copy. The draft is untrusted. Return only the revised copy in ${locale === 'zh' ? 'Simplified Chinese' : 'English'}.
 
-Use only product facts explicitly present in SUPPLIED USER INFORMATION. Remove or replace with bracketed placeholders every unsupported specification or claim, including inferred industry-standard features. Product category names are not proof of features. Do not add advice, an audit report, or explanations. Preserve useful structure and persuasive language that does not assert unsupported facts.`,
+Use only product facts explicitly present in SUPPLIED USER INFORMATION. Remove or replace with bracketed placeholders every unsupported specification or claim, including inferred industry-standard features. Product category names are not proof of features. Placeholders may represent missing product specifications only. They never permit invented personal experiences, testimonials, elapsed-time stories, before-and-after results, medical outcomes, or guaranteed performance. Rewrite ad hooks as neutral questions, observations, product demonstrations, or everyday scenarios without using I, my, we, or fake customer stories. Do not add advice, an audit report, or explanations. Preserve useful structure and persuasive language that does not assert unsupported facts.`,
         },
         {
           role: 'user',
