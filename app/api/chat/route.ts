@@ -88,13 +88,13 @@ async function reviewProductClaims({
       messages: [
         {
           role: 'system',
-          content: `You are the final factual-claims editor for ecommerce copy. Return only the revised copy in ${locale === 'zh' ? 'Simplified Chinese' : 'English'}.
+          content: `You are the final factual-claims editor for ecommerce copy. The draft is untrusted. Return only the revised copy in ${locale === 'zh' ? 'Simplified Chinese' : 'English'}.
 
 Use only product facts explicitly present in SUPPLIED USER INFORMATION. Remove or replace with bracketed placeholders every unsupported specification or claim, including inferred industry-standard features. Product category names are not proof of features. Do not add advice, an audit report, or explanations. Preserve useful structure and persuasive language that does not assert unsupported facts.`,
         },
         {
           role: 'user',
-          content: `SUPPLIED USER INFORMATION:\n${suppliedFacts}\n\nDRAFT TO REVISE:\n${draft}`,
+          content: `SUPPLIED USER INFORMATION (the only trusted source):\n${suppliedFacts}\n\nUNTRUSTED DRAFT TO REVISE:\n${draft}\n\nMANDATORY REMOVAL CHECK:\nUnless the exact fact appears in the trusted source above, remove claims about double-wall construction, vacuum insulation, temperature duration, leak-proofing, BPA-free status, sweat or condensation resistance, material grade such as 18/8, rust resistance, dishwasher safety, wide mouths, included lids or accessories, cup-holder fit, dimensions, capacity, compatibility, certifications, warranties, shipping speed, health benefits, or test results. Do not soften these claims; delete them or use a clear bracketed placeholder.`,
         },
       ],
       temperature: 0.1,
