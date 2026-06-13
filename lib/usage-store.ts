@@ -152,6 +152,20 @@ export async function setTeamAccess(subjectId: string, active: boolean, email = 
   )
 }
 
+export async function mergeUsageSubject(sourceSubjectId: string, targetSubjectId: string, email = '') {
+  if (!getUsageConfig().configured || sourceSubjectId === targetSubjectId) {
+    return getUsageBalance(targetSubjectId)
+  }
+
+  return withMetering(
+    await callRpc<Omit<UsageBalance, 'metering'>>('merge_usage_subject', {
+      p_source_subject_id: sourceSubjectId,
+      p_target_subject_id: targetSubjectId,
+      p_email: email,
+    }),
+  )
+}
+
 export async function fulfillAiPurchase(input: {
   providerReference: string
   subjectId: string

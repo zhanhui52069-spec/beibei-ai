@@ -1,11 +1,13 @@
 import { getUsageBalance } from '@/lib/usage-store'
 import { getUsageSubject, usageCookieHeader } from '@/lib/usage-subject'
+import { appendSetCookies } from '@/lib/supabase-auth'
 
 export async function GET(req: Request) {
-  const subject = getUsageSubject(req)
+  const subject = await getUsageSubject(req)
   const balance = await getUsageBalance(subject.subjectId)
-  const headers = subject.isNew ? { 'Set-Cookie': usageCookieHeader(subject.subjectId) } : undefined
+  const headers = new Headers()
+  appendSetCookies(headers, subject.setCookies)
+  if (subject.isNew) headers.append('Set-Cookie', usageCookieHeader(subject.subjectId))
 
-  return Response.json({ balance }, { headers })
+  return Response.json({ balance, authenticated: subject.authenticated, email: subject.email }, { headers })
 }
-

@@ -1,5 +1,6 @@
 import { createStripeCheckoutSession, isSellerPackId, stripeConfigured } from '@/lib/stripe-rest'
 import { getUsageSubject, usageCookieHeader } from '@/lib/usage-subject'
+import { appendSetCookies } from '@/lib/supabase-auth'
 
 export const runtime = 'nodejs'
 
@@ -23,7 +24,7 @@ export async function POST(req: Request) {
       return Response.json({ error: 'A valid email address is required.' }, { status: 400 })
     }
 
-    const subject = getUsageSubject(req)
+    const subject = await getUsageSubject(req)
     const origin = new URL(req.url).origin
     const configuredURL = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '')
     const appURL = configuredURL || origin
@@ -34,10 +35,10 @@ export async function POST(req: Request) {
       appURL,
     })
 
-    return Response.json(
-      { url: session.url },
-      { headers: subject.isNew ? { 'Set-Cookie': usageCookieHeader(subject.subjectId) } : undefined },
-    )
+    const headers = new Headers()
+    appendSetCookies(headers, subject.setCookies)
+    if (subject.isNew) headers.append('Set-Cookie', usageCookieHeader(subject.subjectId))
+    return Response.json({ url: session.url }, { headers })
   } catch (error) {
     console.error('[checkout] Could not create Stripe session:', error)
     return Response.json(

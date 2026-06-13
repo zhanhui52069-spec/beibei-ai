@@ -14,7 +14,7 @@ import { Label } from '@/components/ui/label'
 
 export default function LoginPage() {
   const router = useRouter()
-  const { t } = useLanguage()
+  const { t, locale } = useLanguage()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -26,16 +26,27 @@ export default function LoginPage() {
     setError('')
     setIsLoading(true)
 
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-
-    if (email && password) {
-      localStorage.setItem('nexusai_user', JSON.stringify({ email }))
-      router.push('/chat')
-    } else {
+    if (!email || !password) {
       setError(t.auth.missingLogin)
+      setIsLoading(false)
+      return
     }
 
-    setIsLoading(false)
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      })
+      const data = await response.json().catch(() => null)
+      if (!response.ok) throw new Error(data?.error || 'Could not log in.')
+      router.push('/chat')
+      router.refresh()
+    } catch (loginError) {
+      setError(loginError instanceof Error ? loginError.message : locale === 'zh' ? '登录失败，请重试' : 'Login failed. Please try again.')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (

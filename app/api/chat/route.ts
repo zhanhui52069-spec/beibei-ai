@@ -1,5 +1,6 @@
 import { completeAiTask, releaseAiTask, reserveAiTask } from '@/lib/usage-store'
 import { getUsageSubject, usageCookieHeader } from '@/lib/usage-subject'
+import { appendSetCookies } from '@/lib/supabase-auth'
 
 export const maxDuration = 60
 const promptVersion = 'global-seller-v10'
@@ -203,14 +204,16 @@ function normalizeMessages(messages: any[] = []): ChatMessage[] {
 }
 
 export async function POST(req: Request) {
-  const subject = getUsageSubject(req)
+  const subject = await getUsageSubject(req)
   const requestId = crypto.randomUUID()
   let reservation: Awaited<ReturnType<typeof reserveAiTask>> | null = null
 
-  const responseHeaders = () => ({
-    'X-Nexus-Prompt-Version': promptVersion,
-    ...(subject.isNew ? { 'Set-Cookie': usageCookieHeader(subject.subjectId) } : {}),
-  })
+  const responseHeaders = () => {
+    const headers = new Headers({ 'X-Nexus-Prompt-Version': promptVersion })
+    appendSetCookies(headers, subject.setCookies)
+    if (subject.isNew) headers.append('Set-Cookie', usageCookieHeader(subject.subjectId))
+    return headers
+  }
 
   try {
     const apiKey = process.env.OPENAI_API_KEY

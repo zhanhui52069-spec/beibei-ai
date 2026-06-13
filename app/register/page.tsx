@@ -14,7 +14,7 @@ import { Label } from '@/components/ui/label'
 
 export default function RegisterPage() {
   const router = useRouter()
-  const { t } = useLanguage()
+  const { t, locale } = useLanguage()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -43,12 +43,27 @@ export default function RegisterPage() {
     }
 
     setIsLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    try {
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
+      })
+      const data = await response.json().catch(() => null)
+      if (!response.ok) throw new Error(data?.error || 'Could not create account.')
 
-    localStorage.setItem('nexusai_user', JSON.stringify({ name, email }))
-    router.push('/chat')
+      if (data?.confirmationRequired) {
+        setError(locale === 'zh' ? '注册成功，请打开邮箱确认账号后再登录' : 'Account created. Check your email to confirm it, then log in.')
+        return
+      }
 
-    setIsLoading(false)
+      router.push('/chat')
+      router.refresh()
+    } catch (registerError) {
+      setError(registerError instanceof Error ? registerError.message : locale === 'zh' ? '注册失败，请重试' : 'Registration failed. Please try again.')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (

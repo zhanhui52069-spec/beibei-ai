@@ -387,6 +387,75 @@ begin
 end;
 $$;
 
+create or replace function public.merge_usage_subject(
+  p_source_subject_id text,
+  p_target_subject_id text,
+  p_email text default ''
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  source_account public.usage_accounts%rowtype;
+begin
+  if coalesce(p_source_subject_id, '') = '' or coalesce(p_target_subject_id, '') = '' then
+    raise exception 'Source and target subject IDs are required';
+  end if;
+
+  if p_source_subject_id = p_target_subject_id then
+    return public.get_ai_balance(p_target_subject_id);
+  end if;
+
+  select * into source_account
+  from public.usage_accounts
+  where subject_id = p_source_subject_id
+  for update;
+
+  insert into public.usage_accounts(subject_id, email)
+  values (p_target_subject_id, coalesce(p_email, ''))
+  on conflict (subject_id) do update
+    set email = case when excluded.email <> '' then excluded.email else usage_accounts.email end,
+        updated_at = now();
+
+  if source_account.subject_id is null then
+    return public.get_ai_balance(p_target_subject_id);
+  end if;
+
+  update public.usage_accounts
+  set email = case when coalesce(p_email, '') <> '' then p_email else email end,
+      plan = case
+        when team_active or source_account.team_active then 'team'
+        when plan = 'seller' or source_account.plan = 'seller' then 'seller'
+        else 'free'
+      end,
+      team_active = team_active or source_account.team_active,
+      free_used = greatest(free_used, source_account.free_used),
+      free_reset_at = greatest(free_reset_at, source_account.free_reset_at),
+      updated_at = now()
+  where subject_id = p_target_subject_id;
+
+  update public.credit_lots set subject_id = p_target_subject_id where subject_id = p_source_subject_id;
+  update public.task_reservations set subject_id = p_target_subject_id where subject_id = p_source_subject_id;
+  update public.usage_events set subject_id = p_target_subject_id where subject_id = p_source_subject_id;
+  update public.payment_fulfillments set subject_id = p_target_subject_id where subject_id = p_source_subject_id;
+
+  delete from public.usage_accounts where subject_id = p_source_subject_id;
+
+  insert into public.usage_events(subject_id, event_type, amount, note, metadata)
+  values (
+    p_target_subject_id,
+    'account_merged',
+    0,
+    'Guest device balance merged into signed-in account',
+    jsonb_build_object('sourceSubjectId', p_source_subject_id)
+  );
+
+  return public.get_ai_balance(p_target_subject_id);
+end;
+$$;
+
 revoke all on public.usage_accounts from anon, authenticated;
 revoke all on public.credit_lots from anon, authenticated;
 revoke all on public.task_reservations from anon, authenticated;
@@ -399,6 +468,7 @@ revoke execute on function public.release_ai_task(text, uuid, text) from public,
 revoke execute on function public.adjust_ai_credits(text, integer, text, text, text) from public, anon, authenticated;
 revoke execute on function public.set_team_access(text, boolean, text) from public, anon, authenticated;
 revoke execute on function public.fulfill_ai_purchase(text, text, text, text, integer, integer, text) from public, anon, authenticated;
+revoke execute on function public.merge_usage_subject(text, text, text) from public, anon, authenticated;
 
 grant select, insert, update, delete on public.usage_accounts to service_role;
 grant select, insert, update, delete on public.credit_lots to service_role;
@@ -412,3 +482,4 @@ grant execute on function public.release_ai_task(text, uuid, text) to service_ro
 grant execute on function public.adjust_ai_credits(text, integer, text, text, text) to service_role;
 grant execute on function public.set_team_access(text, boolean, text) to service_role;
 grant execute on function public.fulfill_ai_purchase(text, text, text, text, integer, integer, text) to service_role;
+grant execute on function public.merge_usage_subject(text, text, text) to service_role;
